@@ -11,6 +11,7 @@ service Profile {
     rpc RegisterByService(RegisterByServiceRequest) returns(RegisterResponse);
     rpc UserIsValid(UserIsValidRequest) returns(SuccessResponse);
     rpc NameIsValid(NameIsValidRequest) returns(SuccessResponse);
+    rpc ServiceIsValid(ServiceIsValidRequest) returns(SuccessResponse);
     rpc ChangeName(ChangeNameRequest) returns(SuccessResponse);
     rpc ChangePassword(ChangePasswordRequest) returns(SuccessResponse);
     rpc AddServiceAuth(AddServiceAuthRequest) returns(SuccessResponse);
@@ -51,6 +52,10 @@ message UserIsValidRequest {
 }
 message NameIsValidRequest {
     string name = 1;
+}
+message ServiceIsValidRequest {
+    string name = 1;
+    string id = 2;
 }
 message ChangeNameRequest {
     string id = 1;

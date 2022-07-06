@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -12,6 +13,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
+	"wartech-studio.com/monster-reacher/gateway/api/authorization"
 	"wartech-studio.com/monster-reacher/gateway/services/authentication"
 	"wartech-studio.com/monster-reacher/gateway/services/profile"
 	"wartech-studio.com/monster-reacher/gateway/services/services_discovery"
@@ -37,9 +39,10 @@ type UserRegister struct {
 }
 
 type ServiceRegister struct {
-	Name  string `json:"service_name,omitempty"`
-	ID    string `json:"service_id,omitempty"`
-	Token string `json:"service_token,omitempty"`
+	Name   string `json:"service_name,omitempty"`
+	ID     string `json:"service_id,omitempty"`
+	Token  string `json:"service_token,omitempty"`
+	Secret string `json:"service_secret,omitempty"`
 }
 
 func (*authApiHandle) register(res http.ResponseWriter, req *http.Request) {
@@ -137,5 +140,68 @@ func registerByUser(serivces map[string]*services_discovery.ServiceInfo, user *U
 }
 
 func registerByService(serivces map[string]*services_discovery.ServiceInfo, service *ServiceRegister) (string, error) {
-	return "", nil
+
+	var autho authorization.Authorization = nil
+
+	switch strings.ToUpper(service.Name) {
+	case authorization.SERVICE_MAME_GOOGLE:
+		autho = authorization.NewAuthorizationGoogle(service.Token)
+	case authorization.SERVICE_MAME_FACEBOOK:
+		autho = authorization.NewAuthorizationFacebook(service.Token)
+	case authorization.SERVICE_MAME_TWITTER:
+		autho = authorization.NewAuthorizationTwitter(service.Token + "--" + service.Secret)
+	case authorization.SERVICE_MAME_APPLE:
+		autho = authorization.NewAuthorizationApple(service.Token)
+	}
+
+	if autho == nil {
+		return "", errors.New("services " + service.Name + " not support")
+	}
+
+	if err := autho.SubmitAuth(); err != nil {
+		return "", err
+	}
+
+	if autho.GetData() == nil {
+		return "", errors.New("user info is empty")
+	}
+
+	cc, err := grpc.Dial(serivces["profile"].GetHost(), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return "", fmt.Errorf("serivces Dial is error %s", err.Error())
+	}
+	defer cc.Close()
+
+	ctx, cancle := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancle()
+
+	c := profile.NewProfileClient(cc)
+
+	result, err := c.ServiceIsValid(ctx, &profile.ServiceIsValidRequest{
+		Name: autho.GetServiceName(),
+		Id:   autho.GetData().ID,
+	})
+
+	if err != nil {
+		return "", fmt.Errorf("serivces UserIsValid is error %s", err.Error())
+	}
+
+	if result.GetSuccess() {
+		return "", fmt.Errorf("service %s id %s is exist", autho.GetServiceName(), autho.GetData().ID)
+	}
+
+	resultRegister, err := c.RegisterByService(ctx, &profile.RegisterByServiceRequest{
+		Name: autho.GetServiceName(),
+		Id:   autho.GetData().ID,
+	})
+
+	if err != nil {
+		return "", fmt.Errorf("serivces Register is error %s", err.Error())
+	}
+
+	if resultRegister.GetId() == "" {
+		return "", fmt.Errorf("service %s id %s register fail", autho.GetServiceName(), autho.GetData().ID)
+	}
+
+	return resultRegister.GetId(), nil
 }

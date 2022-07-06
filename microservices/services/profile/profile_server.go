@@ -100,6 +100,13 @@ func (*profileServer) NameIsValid(ctx context.Context, req *NameIsValidRequest) 
 	data, _ := getProfileData(ctx, driver, filter)
 	return &SuccessResponse{Success: data != nil}, nil
 }
+func (*profileServer) ServiceIsValid(ctx context.Context, req *ServiceIsValidRequest) (*SuccessResponse, error) {
+	driver := getDriver()
+	defer driver.Close()
+	filter := database.MongoDBSelectOneQueryFilterOne("serviceAuth."+req.GetName(), req.GetId())
+	data, _ := getProfileData(ctx, driver, filter)
+	return &SuccessResponse{Success: data != nil}, nil
+}
 func (*profileServer) ChangeName(ctx context.Context, req *ChangeNameRequest) (*SuccessResponse, error) {
 	driver := getDriver()
 	defer driver.Close()

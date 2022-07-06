@@ -29,6 +29,7 @@ type ProfileClient interface {
 	RegisterByService(ctx context.Context, in *RegisterByServiceRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	UserIsValid(ctx context.Context, in *UserIsValidRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	NameIsValid(ctx context.Context, in *NameIsValidRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	ServiceIsValid(ctx context.Context, in *ServiceIsValidRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	ChangeName(ctx context.Context, in *ChangeNameRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	AddServiceAuth(ctx context.Context, in *AddServiceAuthRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
@@ -107,6 +108,15 @@ func (c *profileClient) NameIsValid(ctx context.Context, in *NameIsValidRequest,
 	return out, nil
 }
 
+func (c *profileClient) ServiceIsValid(ctx context.Context, in *ServiceIsValidRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
+	out := new(SuccessResponse)
+	err := c.cc.Invoke(ctx, "/profile.Profile/ServiceIsValid", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *profileClient) ChangeName(ctx context.Context, in *ChangeNameRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
 	out := new(SuccessResponse)
 	err := c.cc.Invoke(ctx, "/profile.Profile/ChangeName", in, out, opts...)
@@ -163,6 +173,7 @@ type ProfileServer interface {
 	RegisterByService(context.Context, *RegisterByServiceRequest) (*RegisterResponse, error)
 	UserIsValid(context.Context, *UserIsValidRequest) (*SuccessResponse, error)
 	NameIsValid(context.Context, *NameIsValidRequest) (*SuccessResponse, error)
+	ServiceIsValid(context.Context, *ServiceIsValidRequest) (*SuccessResponse, error)
 	ChangeName(context.Context, *ChangeNameRequest) (*SuccessResponse, error)
 	ChangePassword(context.Context, *ChangePasswordRequest) (*SuccessResponse, error)
 	AddServiceAuth(context.Context, *AddServiceAuthRequest) (*SuccessResponse, error)
@@ -195,6 +206,9 @@ func (UnimplementedProfileServer) UserIsValid(context.Context, *UserIsValidReque
 }
 func (UnimplementedProfileServer) NameIsValid(context.Context, *NameIsValidRequest) (*SuccessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NameIsValid not implemented")
+}
+func (UnimplementedProfileServer) ServiceIsValid(context.Context, *ServiceIsValidRequest) (*SuccessResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ServiceIsValid not implemented")
 }
 func (UnimplementedProfileServer) ChangeName(context.Context, *ChangeNameRequest) (*SuccessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangeName not implemented")
@@ -350,6 +364,24 @@ func _Profile_NameIsValid_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Profile_ServiceIsValid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ServiceIsValidRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProfileServer).ServiceIsValid(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/profile.Profile/ServiceIsValid",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProfileServer).ServiceIsValid(ctx, req.(*ServiceIsValidRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Profile_ChangeName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ChangeNameRequest)
 	if err := dec(in); err != nil {
@@ -474,6 +506,10 @@ var Profile_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "NameIsValid",
 			Handler:    _Profile_NameIsValid_Handler,
+		},
+		{
+			MethodName: "ServiceIsValid",
+			Handler:    _Profile_ServiceIsValid_Handler,
 		},
 		{
 			MethodName: "ChangeName",

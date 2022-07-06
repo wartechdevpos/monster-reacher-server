@@ -28,7 +28,7 @@ func TestRegister(t *testing.T) {
 		t.Error(err)
 	}
 
-	t.Log(res.GetSuccess())
+	t.Log(res.GetId())
 }
 
 func TestRegisterByService(t *testing.T) {
