@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"os"
 
 	"golang.org/x/oauth2/google"
@@ -49,11 +48,11 @@ func (auth *authorizationGoogle) SubmitAuth() error {
 
 	res, err := client.Get("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + tok.AccessToken)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	bodyBytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	auth.userInfo = &UserInfo{}
