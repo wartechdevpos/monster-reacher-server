@@ -19,7 +19,7 @@ func NewServicesDiscoveryServer() ServicesDiscoveryServer {
 
 func (sd *servicesDiscoveryServer) Register(ctx context.Context, req *RegisterRequest) (*RegisterResponse, error) {
 	for k := range sd.services {
-		if sd.services[k].Host == req.GetHost() && sd.services[k].Port == req.GetPort() {
+		if sd.services[k].Host == req.GetHost() {
 			if sd.services[k].Name != req.GetService() {
 				log.Printf("the service on host %s is switching from %s to %s\n", req.GetHost(), sd.services[k].Name, req.GetService())
 			}
@@ -32,7 +32,6 @@ func (sd *servicesDiscoveryServer) Register(ctx context.Context, req *RegisterRe
 	sd.services[uuid.String()] = &ServiceInfo{
 		Name: req.GetService(),
 		Host: req.GetHost(),
-		Port: req.GetPort(),
 	}
 	log.Printf("the service %s on host %s was register is success \n", req.GetService(), req.GetHost())
 	return &RegisterResponse{Token: string(uuid.String())}, nil
