@@ -38,13 +38,12 @@ func (auth *authorizationGoogle) SubmitAuth() error {
 	if err != nil {
 		return err
 	}
-
+	log.Println(41, auth.token)
 	tok, err := config.Exchange(context.TODO(), auth.token)
-
+	log.Println(43)
 	if err != nil {
 		return err
 	}
-
 	client := config.Client(context.TODO(), tok)
 	log.Println(49)
 	res, err := client.Get("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + tok.AccessToken)

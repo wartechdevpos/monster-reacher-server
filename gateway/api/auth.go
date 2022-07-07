@@ -166,7 +166,7 @@ func registerByService(serivces map[string]*services_discovery.ServiceInfo, serv
 	}
 
 	if err := autho.SubmitAuth(); err != nil {
-		log.Println(err.Error())
+		log.Println("SubmitAuth ", err.Error())
 		return "", errors.New("token is expired")
 	}
 
