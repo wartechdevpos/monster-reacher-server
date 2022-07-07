@@ -65,11 +65,13 @@ func (*authApiHandle) register(res http.ResponseWriter, req *http.Request) {
 		if userRegister.User != "" {
 			if idRegister, err = registerByUser(serivces, &userRegister); err != nil {
 				res.Write([]byte(fmt.Sprintf(`{"success": false ,"message":"%s"}`, err.Error())))
+				return
 			}
 		}
 		if userRegister.Name != "" {
 			if idRegister, err = registerByService(serivces, &userRegister); err != nil {
 				res.Write([]byte(fmt.Sprintf(`{"success": false ,"message":"%s"}`, err.Error())))
+				return
 			}
 		}
 	} else {
@@ -92,7 +94,7 @@ func (*authApiHandle) register(res http.ResponseWriter, req *http.Request) {
 		res.Write([]byte(fmt.Sprintf(`{"success": false ,"message":"serivces is error %s"}`, err.Error())))
 		return
 	}
-	res.Write([]byte(fmt.Sprintf(`{"success": true ,"access_token":%s , "id":%s}`, resSignUp.GetAccessToken(), idRegister)))
+	res.Write([]byte(fmt.Sprintf(`{"success": true ,"access_token":"%s" , "id":"%s"}`, resSignUp.GetAccessToken(), idRegister)))
 }
 
 func registerByUser(serivces map[string]*services_discovery.ServiceInfo, user *UserRegister) (string, error) {
@@ -163,7 +165,7 @@ func registerByService(serivces map[string]*services_discovery.ServiceInfo, serv
 	}
 
 	if err := autho.SubmitAuth(); err != nil {
-		return "", err
+		return "", errors.New("token is expired")
 	}
 
 	if autho.GetData() == nil {

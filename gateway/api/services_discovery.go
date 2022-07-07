@@ -48,8 +48,6 @@ func (sd *servicesDiscovery) Start(host string) {
 		for _, service := range res.GetServices() {
 			sd.updateServicesInfo(service)
 		}
-
-		log.Println(sd.services)
 	}
 }
 

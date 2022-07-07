@@ -6,7 +6,8 @@ import (
 	"os"
 )
 
-//const PATH_PROJECT = "D:/WTProject/monster-reacher/server"
+//const PATH_PROJECT = "D:/WTProject/devpos/monster-reacher-server"
+
 const PATH_PROJECT = "/app/monster-reacher-server/"
 
 type wartechConfig struct {
