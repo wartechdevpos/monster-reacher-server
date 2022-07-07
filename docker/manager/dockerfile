@@ -7,7 +7,7 @@ ARG GIT_COMMIT
 WORKDIR /app
 
 RUN apk update && apk add git
-RUN git clone https://github.com/Zmuo12345/monster-reacher-server.git
+RUN git clone https://github.com/wartechdevpos/monster-reacher-server.git
 WORKDIR /app/monster-reacher-server
 RUN git fetch
 RUN git checkout ${GIT_COMMIT}
