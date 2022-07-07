@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -165,6 +166,7 @@ func registerByService(serivces map[string]*services_discovery.ServiceInfo, serv
 	}
 
 	if err := autho.SubmitAuth(); err != nil {
+		log.Println(err)
 		return "", errors.New("token is expired")
 	}
 
