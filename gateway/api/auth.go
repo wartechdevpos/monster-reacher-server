@@ -33,16 +33,13 @@ func (*authApiHandle) home(res http.ResponseWriter, req *http.Request) {
 }
 
 type UserRegister struct {
-	User     string `json:"user,omitempty"`
-	Password string `json:"password,omitempty"`
-	Email    string `json:"email,omitempty"`
-}
-
-type ServiceRegister struct {
-	Name   string `json:"service_name,omitempty"`
-	ID     string `json:"service_id,omitempty"`
-	Token  string `json:"service_token,omitempty"`
-	Secret string `json:"service_secret,omitempty"`
+	User     string `json:"user"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+	Name     string `json:"service_name"`
+	ID       string `json:"service_id"`
+	Token    string `json:"service_token"`
+	Secret   string `json:"service_secret"`
 }
 
 func (*authApiHandle) register(res http.ResponseWriter, req *http.Request) {
@@ -52,25 +49,27 @@ func (*authApiHandle) register(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	serivces, ok := ServicesDiscoveryCache.CheckRequireServices([]string{"authentication", "profile"})
-
-	if !ok {
-		res.Write([]byte(`{"success": false ,"message":"service profile,authentication is offline"}`))
-		return
-	}
-
+	serivces, _ := ServicesDiscoveryCache.CheckRequireServices([]string{"authentication", "profile"})
+	/*
+		if !ok {
+			res.Write([]byte(`{"success": false ,"message":"service profile,authentication is offline"}`))
+			return
+		}
+	*/
 	userRegister := UserRegister{}
-	serviceRegister := ServiceRegister{}
 	idRegister := ""
 	var err error = nil
 
 	if err = json.NewDecoder(req.Body).Decode(&userRegister); err == nil {
-		if idRegister, err = registerByUser(serivces, &userRegister); err != nil {
-			res.Write([]byte(fmt.Sprintf(`{"success": false ,"message":"%s"}`, err.Error())))
+		if userRegister.User != "" {
+			if idRegister, err = registerByUser(serivces, &userRegister); err != nil {
+				res.Write([]byte(fmt.Sprintf(`{"success": false ,"message":"%s"}`, err.Error())))
+			}
 		}
-	} else if err = json.NewDecoder(req.Body).Decode(&serviceRegister); err == nil {
-		if idRegister, err = registerByService(serivces, &serviceRegister); err != nil {
-			res.Write([]byte(fmt.Sprintf(`{"success": false ,"message":"%s"}`, err.Error())))
+		if userRegister.Name != "" {
+			if idRegister, err = registerByService(serivces, &userRegister); err != nil {
+				res.Write([]byte(fmt.Sprintf(`{"success": false ,"message":"%s"}`, err.Error())))
+			}
 		}
 	} else {
 		res.Write([]byte(fmt.Sprintf(`{"success": false ,"message":"please check params user,password,email or service_name,service_id,service_token","error":%s}`, err.Error())))
@@ -139,7 +138,11 @@ func registerByUser(serivces map[string]*services_discovery.ServiceInfo, user *U
 	return resultRegister.GetId(), nil
 }
 
-func registerByService(serivces map[string]*services_discovery.ServiceInfo, service *ServiceRegister) (string, error) {
+func registerByService(serivces map[string]*services_discovery.ServiceInfo, service *UserRegister) (string, error) {
+
+	if service.Name == "" || service.Token == "" {
+		return "", fmt.Errorf("some a param is empty. please check params service_name,service_token")
+	}
 
 	var autho authorization.Authorization = nil
 
