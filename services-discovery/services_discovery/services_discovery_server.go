@@ -54,7 +54,7 @@ func (sd *servicesDiscoveryServer) HealthCheck(stream ServicesDiscovery_HealthCh
 		}
 		token = msg.GetToken()
 		service.IsOnline = true
-		log.Printf("the service %s on host %s health check is ok \n", service.Name, service.Host)
+		//log.Printf("the service %s on host %s health check is ok \n", service.Name, service.Host)
 		stream.Send(&HealthCheckResponse{Success: true, Message: "ok"})
 	}
 	return nil
