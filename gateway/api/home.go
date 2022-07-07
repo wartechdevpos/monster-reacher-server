@@ -15,5 +15,10 @@ func RegisterHomeApiHandle(router *mux.Router) *homeApiHandle {
 }
 
 func (*homeApiHandle) home(res http.ResponseWriter, req *http.Request) {
+	enableCors(res)
 	res.Write([]byte("This home of api"))
+}
+
+func enableCors(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 }

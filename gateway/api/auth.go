@@ -29,6 +29,7 @@ func RegisterAuthApiHandle(router *mux.Router) *authApiHandle {
 }
 
 func (*authApiHandle) home(res http.ResponseWriter, req *http.Request) {
+	enableCors(res)
 	res.Write([]byte("This home of auth"))
 }
 
@@ -43,7 +44,7 @@ type UserRegister struct {
 }
 
 func (*authApiHandle) register(res http.ResponseWriter, req *http.Request) {
-
+	enableCors(res)
 	if strings.ToLower(req.Method) != "post" {
 		res.Write([]byte("use POST for register by user,password,email or service_name,service_id,service_token"))
 		return
