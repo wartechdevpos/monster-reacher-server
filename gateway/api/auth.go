@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"wartech-studio.com/monster-reacher/gateway/api/authorization"
+	"wartech-studio.com/monster-reacher/gateway/api/oauth2"
 	"wartech-studio.com/monster-reacher/gateway/services/authentication"
 	"wartech-studio.com/monster-reacher/gateway/services/profile"
 	"wartech-studio.com/monster-reacher/gateway/services/services_discovery"
@@ -148,29 +148,18 @@ func registerByService(serivces map[string]*services_discovery.ServiceInfo, serv
 		return "", fmt.Errorf("some a param is empty. please check params service_name,service_token")
 	}
 
-	var autho authorization.Authorization = nil
+	provider := oauth2.NewOAuth2Provider(service.Name)
 
-	switch strings.ToUpper(service.Name) {
-	case authorization.SERVICE_MAME_GOOGLE:
-		autho = authorization.NewAuthorizationGoogle(service.Token)
-	case authorization.SERVICE_MAME_FACEBOOK:
-		autho = authorization.NewAuthorizationFacebook(service.Token)
-	case authorization.SERVICE_MAME_TWITTER:
-		autho = authorization.NewAuthorizationTwitter(service.Token + "--" + service.Secret)
-	case authorization.SERVICE_MAME_APPLE:
-		autho = authorization.NewAuthorizationApple(service.Token)
-	}
-
-	if autho == nil {
+	if provider == nil {
 		return "", errors.New("services " + service.Name + " not support")
 	}
 
-	if err := autho.SubmitAuth(); err != nil {
+	if err := provider.SubmitAuth(service.Token); err != nil {
 		log.Println("SubmitAuth ", err.Error())
 		return "", errors.New("token is expired")
 	}
 
-	if autho.GetData() == nil {
+	if provider.GetData() == nil {
 		return "", errors.New("user info is empty")
 	}
 
@@ -186,8 +175,8 @@ func registerByService(serivces map[string]*services_discovery.ServiceInfo, serv
 	c := profile.NewProfileClient(cc)
 
 	result, err := c.ServiceIsValid(ctx, &profile.ServiceIsValidRequest{
-		Name: autho.GetServiceName(),
-		Id:   autho.GetData().ID,
+		Name: provider.GetServiceName(),
+		Id:   provider.GetData().ID,
 	})
 
 	if err != nil {
@@ -195,12 +184,12 @@ func registerByService(serivces map[string]*services_discovery.ServiceInfo, serv
 	}
 
 	if result.GetSuccess() {
-		return "", fmt.Errorf("service %s id %s is exist", autho.GetServiceName(), autho.GetData().ID)
+		return "", fmt.Errorf("service %s id %s is exist", provider.GetServiceName(), provider.GetData().ID)
 	}
 
 	resultRegister, err := c.RegisterByService(ctx, &profile.RegisterByServiceRequest{
-		Name: autho.GetServiceName(),
-		Id:   autho.GetData().ID,
+		Name: provider.GetServiceName(),
+		Id:   provider.GetData().ID,
 	})
 
 	if err != nil {
@@ -208,7 +197,7 @@ func registerByService(serivces map[string]*services_discovery.ServiceInfo, serv
 	}
 
 	if resultRegister.GetId() == "" {
-		return "", fmt.Errorf("service %s id %s register fail", autho.GetServiceName(), autho.GetData().ID)
+		return "", fmt.Errorf("service %s id %s register fail", provider.GetServiceName(), provider.GetData().ID)
 	}
 
 	return resultRegister.GetId(), nil
