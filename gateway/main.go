@@ -9,7 +9,6 @@ import (
 	"wartech-studio.com/monster-reacher/gateway/api"
 	"wartech-studio.com/monster-reacher/gateway/services/gateway"
 	"wartech-studio.com/monster-reacher/libraries/config"
-	"wartech-studio.com/monster-reacher/libraries/healthcheck"
 )
 
 const SERVICES_NAME = "gateway"
@@ -21,8 +20,6 @@ var listenHost = fmt.Sprintf("%s:%d",
 func main() {
 	initServicesDiscovery()
 	server := grpc.NewServer()
-	healthchecker := healthcheck.NewHealthCheckClient()
-	go healthchecker.Start(SERVICES_NAME, listenHost)
 	listener, err := net.Listen("tcp", listenHost)
 	if err != nil {
 		log.Fatal(err)
