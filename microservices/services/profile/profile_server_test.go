@@ -2,6 +2,7 @@ package profile
 
 import (
 	"context"
+	"fmt"
 	"testing"
 )
 
@@ -14,7 +15,17 @@ func TestAuthentication(t *testing.T) {
 }
 
 func TestAuthenticationByService(t *testing.T) {
+	server := NewProfileServer()
+	res, err := server.AuthenticationByService(context.Background(), &AuthenticationByServiceRequest{
+		Name: "google",
+		Id:   "112170918475213245662",
+	})
 
+	if err != nil {
+		t.Error(err)
+	}
+
+	fmt.Println(res)
 }
 
 func TestRegister(t *testing.T) {
@@ -29,8 +40,4 @@ func TestRegister(t *testing.T) {
 	}
 
 	t.Log(res.GetId())
-}
-
-func TestRegisterByService(t *testing.T) {
-
 }

@@ -79,7 +79,7 @@ func RegisterByUser(profileService *services_discovery.ServiceInfo, user string,
 
 	c := profile.NewProfileClient(cc)
 	var result *profile.CheckProfileResponse
-	if result, err = c.Authentication(ctx, &profile.AuthenticationRequest{User: user, Password: password}); err != nil && result.GetId() != "" {
+	if result, err = c.Authentication(ctx, &profile.AuthenticationRequest{User: user, Password: password}); err == nil && result.GetId() != "" {
 		id = result.GetId()
 		return
 	}
@@ -137,7 +137,7 @@ func RegisterByService(profileService *services_discovery.ServiceInfo, serviceNa
 	c := profile.NewProfileClient(cc)
 
 	var result *profile.CheckProfileResponse = nil
-	if result, err = c.AuthenticationByService(ctx, &profile.AuthenticationByServiceRequest{Name: serviceName, Id: provider.GetData().ID}); err != nil && result.GetId() != "" {
+	if result, err = c.AuthenticationByService(ctx, &profile.AuthenticationByServiceRequest{Name: serviceName, Id: provider.GetData().ID}); err == nil && result.GetId() != "" {
 		id = result.GetId()
 		return
 	}
