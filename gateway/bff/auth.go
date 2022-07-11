@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"google.golang.org/grpc"
@@ -19,7 +20,7 @@ import (
 
 func Authentication(user string, password string, email string, serviceName string, serviceAuthCode string) (id string, isNew bool, token string, err error) {
 	serivces, ok := api.ServicesDiscoveryCache.CheckRequireServices([]string{"authentication", "profile"})
-
+	serviceName = strings.ToLower(serviceName)
 	if !ok {
 		err = errors.New("service profile,authentication is offline")
 		return
