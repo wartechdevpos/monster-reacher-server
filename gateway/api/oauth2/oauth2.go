@@ -51,9 +51,20 @@ func (authPtr *oAuth2) SubmitAuth(tokenCode string) error {
 	if err != nil {
 		return err
 	}
-
 	authPtr.userInfo = &UserInfo{}
-	return json.Unmarshal(bodyBytes, authPtr.userInfo)
+	json.Unmarshal(bodyBytes, authPtr.userInfo)
+
+	// for twiiter
+	if authPtr.userInfo.ID == "" {
+		type DatauserInfo struct {
+			Data UserInfo
+		}
+		datauserInfo := &DatauserInfo{}
+		json.Unmarshal(bodyBytes, datauserInfo)
+		authPtr.userInfo = &datauserInfo.Data
+	}
+
+	return nil
 }
 func (authPtr *oAuth2) GetData() *UserInfo     { return authPtr.userInfo }
 func (authPtr *oAuth2) GetServiceName() string { return authPtr.providerName }
