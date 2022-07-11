@@ -3,11 +3,13 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
+	"net"
 
-	"github.com/gorilla/mux"
+	"google.golang.org/grpc"
 	"wartech-studio.com/monster-reacher/gateway/api"
+	"wartech-studio.com/monster-reacher/gateway/services/gateway"
 	"wartech-studio.com/monster-reacher/libraries/config"
+	"wartech-studio.com/monster-reacher/libraries/healthcheck"
 )
 
 const SERVICES_NAME = "gateway"
@@ -18,10 +20,23 @@ var listenHost = fmt.Sprintf("%s:%d",
 
 func main() {
 	initServicesDiscovery()
-	router := mux.NewRouter().StrictSlash(true)
-	api.RegisterHomeApiHandle(router)
-	api.RegisterAuthApiHandle(router)
-	log.Fatal(http.ListenAndServe(listenHost, router))
+	server := grpc.NewServer()
+	healthchecker := healthcheck.NewHealthCheckClient()
+	go healthchecker.Start(SERVICES_NAME, listenHost)
+	listener, err := net.Listen("tcp", listenHost)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer listener.Close()
+
+	gateway.RegisterGatewayServer(server, gateway.NewGatewayServer())
+	//reflection.Register(server)
+	log.Println("gRPC server listening on " + listenHost)
+	err = server.Serve(listener)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func initServicesDiscovery() {

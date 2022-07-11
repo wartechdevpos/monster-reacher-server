@@ -1,0 +1,22 @@
+syntax="proto3";
+
+package gateway;
+option go_package="./gateway";
+
+service Gateway {
+    rpc Authentication(AuthenticationRequest) returns(AuthenticationReasponse);
+}
+
+message AuthenticationRequest {
+    string user = 1;
+    string password = 2;
+    string email = 3;
+    string service_name = 4;
+    string service_auth_code = 5;
+}
+
+message AuthenticationReasponse {
+    bool is_new = 1;
+    string token = 2;
+    string id = 3;
+}

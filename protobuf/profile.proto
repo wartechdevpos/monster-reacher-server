@@ -5,13 +5,13 @@ option go_package="./profile";
 
 service Profile {
     rpc GetData(GetDataRequest) returns(GetDataResponse);
-    rpc Authentication(AuthenticationRequest) returns(SuccessResponse);
-    rpc AuthenticationByService(AuthenticationByServiceRequest) returns(SuccessResponse);
+    rpc Authentication(AuthenticationRequest) returns(CheckProfileResponse);
+    rpc AuthenticationByService(AuthenticationByServiceRequest) returns(CheckProfileResponse);
     rpc Register(RegisterRequest) returns(RegisterResponse);
     rpc RegisterByService(RegisterByServiceRequest) returns(RegisterResponse);
-    rpc UserIsValid(UserIsValidRequest) returns(SuccessResponse);
-    rpc NameIsValid(NameIsValidRequest) returns(SuccessResponse);
-    rpc ServiceIsValid(ServiceIsValidRequest) returns(SuccessResponse);
+    rpc UserIsValid(UserIsValidRequest) returns(CheckProfileResponse);
+    rpc NameIsValid(NameIsValidRequest) returns(CheckProfileResponse);
+    rpc ServiceIsValid(ServiceIsValidRequest) returns(CheckProfileResponse);
     rpc ChangeName(ChangeNameRequest) returns(SuccessResponse);
     rpc ChangePassword(ChangePasswordRequest) returns(SuccessResponse);
     rpc AddServiceAuth(AddServiceAuthRequest) returns(SuccessResponse);
@@ -75,6 +75,9 @@ message RemoveServiceAuthRequest {
     string name = 2;
 }
 
+message CheckProfileResponse {
+    string id = 1;
+}
 message SuccessResponse {
     bool success = 1;
 }

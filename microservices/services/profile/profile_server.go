@@ -40,19 +40,25 @@ func (*profileServer) GetData(ctx context.Context, req *GetDataRequest) (*GetDat
 	b, _ := json.Marshal(*data)
 	return &GetDataResponse{Data: b}, err
 }
-func (*profileServer) Authentication(ctx context.Context, req *AuthenticationRequest) (*SuccessResponse, error) {
+func (*profileServer) Authentication(ctx context.Context, req *AuthenticationRequest) (*CheckProfileResponse, error) {
 	driver := getDriver()
 	defer driver.Close()
 	filter := database.MongoDBSelectOneQueryFilterMany([]string{"auth.user", "auth.password"}, []interface{}{req.GetUser(), req.GetPassword()})
 	data, err := getProfileData(ctx, driver, filter)
-	return &SuccessResponse{Success: data != nil}, err
+	if err != nil {
+		return nil, err
+	}
+	return &CheckProfileResponse{Id: data.ID}, nil
 }
-func (*profileServer) AuthenticationByService(ctx context.Context, req *AuthenticationByServiceRequest) (*SuccessResponse, error) {
+func (*profileServer) AuthenticationByService(ctx context.Context, req *AuthenticationByServiceRequest) (*CheckProfileResponse, error) {
 	driver := getDriver()
 	defer driver.Close()
 	filter := database.MongoDBSelectOneQueryFilterOne(fmt.Sprintf("serviceAuth.%s", req.GetName()), req.GetId())
 	data, err := getProfileData(ctx, driver, filter)
-	return &SuccessResponse{Success: data != nil}, err
+	if err != nil {
+		return nil, err
+	}
+	return &CheckProfileResponse{Id: data.ID}, nil
 }
 func (*profileServer) Register(ctx context.Context, req *RegisterRequest) (*RegisterResponse, error) {
 	driver := getDriver()
@@ -86,26 +92,36 @@ func (*profileServer) RegisterByService(ctx context.Context, req *RegisterByServ
 	log.Println(result)
 	return &RegisterResponse{Id: database.MongoDBDecodeResultToID(result)}, nil
 }
-func (*profileServer) UserIsValid(ctx context.Context, req *UserIsValidRequest) (*SuccessResponse, error) {
+func (*profileServer) UserIsValid(ctx context.Context, req *UserIsValidRequest) (*CheckProfileResponse, error) {
 	driver := getDriver()
 	defer driver.Close()
 	filter := database.MongoDBSelectOneQueryFilterOne("auth.user", req.GetUser())
-	data, _ := getProfileData(ctx, driver, filter)
-	return &SuccessResponse{Success: data != nil}, nil
+	data, err := getProfileData(ctx, driver, filter)
+	if err != nil {
+		return nil, err
+	}
+	return &CheckProfileResponse{Id: data.ID}, nil
 }
-func (*profileServer) NameIsValid(ctx context.Context, req *NameIsValidRequest) (*SuccessResponse, error) {
+func (*profileServer) NameIsValid(ctx context.Context, req *NameIsValidRequest) (*CheckProfileResponse, error) {
 	driver := getDriver()
 	defer driver.Close()
 	filter := database.MongoDBSelectOneQueryFilterOne("name", req.GetName())
 	data, _ := getProfileData(ctx, driver, filter)
-	return &SuccessResponse{Success: data != nil}, nil
+	data, err := getProfileData(ctx, driver, filter)
+	if err != nil {
+		return nil, err
+	}
+	return &CheckProfileResponse{Id: data.ID}, nil
 }
-func (*profileServer) ServiceIsValid(ctx context.Context, req *ServiceIsValidRequest) (*SuccessResponse, error) {
+func (*profileServer) ServiceIsValid(ctx context.Context, req *ServiceIsValidRequest) (*CheckProfileResponse, error) {
 	driver := getDriver()
 	defer driver.Close()
 	filter := database.MongoDBSelectOneQueryFilterOne("serviceAuth."+req.GetName(), req.GetId())
-	data, _ := getProfileData(ctx, driver, filter)
-	return &SuccessResponse{Success: data != nil}, nil
+	data, err := getProfileData(ctx, driver, filter)
+	if err != nil {
+		return nil, err
+	}
+	return &CheckProfileResponse{Id: data.ID}, nil
 }
 func (*profileServer) ChangeName(ctx context.Context, req *ChangeNameRequest) (*SuccessResponse, error) {
 	driver := getDriver()

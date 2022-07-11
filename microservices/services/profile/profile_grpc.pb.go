@@ -23,13 +23,13 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProfileClient interface {
 	GetData(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*GetDataResponse, error)
-	Authentication(ctx context.Context, in *AuthenticationRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
-	AuthenticationByService(ctx context.Context, in *AuthenticationByServiceRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	Authentication(ctx context.Context, in *AuthenticationRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error)
+	AuthenticationByService(ctx context.Context, in *AuthenticationByServiceRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error)
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	RegisterByService(ctx context.Context, in *RegisterByServiceRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
-	UserIsValid(ctx context.Context, in *UserIsValidRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
-	NameIsValid(ctx context.Context, in *NameIsValidRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
-	ServiceIsValid(ctx context.Context, in *ServiceIsValidRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	UserIsValid(ctx context.Context, in *UserIsValidRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error)
+	NameIsValid(ctx context.Context, in *NameIsValidRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error)
+	ServiceIsValid(ctx context.Context, in *ServiceIsValidRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error)
 	ChangeName(ctx context.Context, in *ChangeNameRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	AddServiceAuth(ctx context.Context, in *AddServiceAuthRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
@@ -54,8 +54,8 @@ func (c *profileClient) GetData(ctx context.Context, in *GetDataRequest, opts ..
 	return out, nil
 }
 
-func (c *profileClient) Authentication(ctx context.Context, in *AuthenticationRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
-	out := new(SuccessResponse)
+func (c *profileClient) Authentication(ctx context.Context, in *AuthenticationRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error) {
+	out := new(CheckProfileResponse)
 	err := c.cc.Invoke(ctx, "/profile.Profile/Authentication", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -63,8 +63,8 @@ func (c *profileClient) Authentication(ctx context.Context, in *AuthenticationRe
 	return out, nil
 }
 
-func (c *profileClient) AuthenticationByService(ctx context.Context, in *AuthenticationByServiceRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
-	out := new(SuccessResponse)
+func (c *profileClient) AuthenticationByService(ctx context.Context, in *AuthenticationByServiceRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error) {
+	out := new(CheckProfileResponse)
 	err := c.cc.Invoke(ctx, "/profile.Profile/AuthenticationByService", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -90,8 +90,8 @@ func (c *profileClient) RegisterByService(ctx context.Context, in *RegisterBySer
 	return out, nil
 }
 
-func (c *profileClient) UserIsValid(ctx context.Context, in *UserIsValidRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
-	out := new(SuccessResponse)
+func (c *profileClient) UserIsValid(ctx context.Context, in *UserIsValidRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error) {
+	out := new(CheckProfileResponse)
 	err := c.cc.Invoke(ctx, "/profile.Profile/UserIsValid", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -99,8 +99,8 @@ func (c *profileClient) UserIsValid(ctx context.Context, in *UserIsValidRequest,
 	return out, nil
 }
 
-func (c *profileClient) NameIsValid(ctx context.Context, in *NameIsValidRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
-	out := new(SuccessResponse)
+func (c *profileClient) NameIsValid(ctx context.Context, in *NameIsValidRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error) {
+	out := new(CheckProfileResponse)
 	err := c.cc.Invoke(ctx, "/profile.Profile/NameIsValid", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -108,8 +108,8 @@ func (c *profileClient) NameIsValid(ctx context.Context, in *NameIsValidRequest,
 	return out, nil
 }
 
-func (c *profileClient) ServiceIsValid(ctx context.Context, in *ServiceIsValidRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
-	out := new(SuccessResponse)
+func (c *profileClient) ServiceIsValid(ctx context.Context, in *ServiceIsValidRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error) {
+	out := new(CheckProfileResponse)
 	err := c.cc.Invoke(ctx, "/profile.Profile/ServiceIsValid", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -167,13 +167,13 @@ func (c *profileClient) MergeData(ctx context.Context, in *MergeDataRequest, opt
 // for forward compatibility
 type ProfileServer interface {
 	GetData(context.Context, *GetDataRequest) (*GetDataResponse, error)
-	Authentication(context.Context, *AuthenticationRequest) (*SuccessResponse, error)
-	AuthenticationByService(context.Context, *AuthenticationByServiceRequest) (*SuccessResponse, error)
+	Authentication(context.Context, *AuthenticationRequest) (*CheckProfileResponse, error)
+	AuthenticationByService(context.Context, *AuthenticationByServiceRequest) (*CheckProfileResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	RegisterByService(context.Context, *RegisterByServiceRequest) (*RegisterResponse, error)
-	UserIsValid(context.Context, *UserIsValidRequest) (*SuccessResponse, error)
-	NameIsValid(context.Context, *NameIsValidRequest) (*SuccessResponse, error)
-	ServiceIsValid(context.Context, *ServiceIsValidRequest) (*SuccessResponse, error)
+	UserIsValid(context.Context, *UserIsValidRequest) (*CheckProfileResponse, error)
+	NameIsValid(context.Context, *NameIsValidRequest) (*CheckProfileResponse, error)
+	ServiceIsValid(context.Context, *ServiceIsValidRequest) (*CheckProfileResponse, error)
 	ChangeName(context.Context, *ChangeNameRequest) (*SuccessResponse, error)
 	ChangePassword(context.Context, *ChangePasswordRequest) (*SuccessResponse, error)
 	AddServiceAuth(context.Context, *AddServiceAuthRequest) (*SuccessResponse, error)
@@ -189,10 +189,10 @@ type UnimplementedProfileServer struct {
 func (UnimplementedProfileServer) GetData(context.Context, *GetDataRequest) (*GetDataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetData not implemented")
 }
-func (UnimplementedProfileServer) Authentication(context.Context, *AuthenticationRequest) (*SuccessResponse, error) {
+func (UnimplementedProfileServer) Authentication(context.Context, *AuthenticationRequest) (*CheckProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Authentication not implemented")
 }
-func (UnimplementedProfileServer) AuthenticationByService(context.Context, *AuthenticationByServiceRequest) (*SuccessResponse, error) {
+func (UnimplementedProfileServer) AuthenticationByService(context.Context, *AuthenticationByServiceRequest) (*CheckProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AuthenticationByService not implemented")
 }
 func (UnimplementedProfileServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
@@ -201,13 +201,13 @@ func (UnimplementedProfileServer) Register(context.Context, *RegisterRequest) (*
 func (UnimplementedProfileServer) RegisterByService(context.Context, *RegisterByServiceRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterByService not implemented")
 }
-func (UnimplementedProfileServer) UserIsValid(context.Context, *UserIsValidRequest) (*SuccessResponse, error) {
+func (UnimplementedProfileServer) UserIsValid(context.Context, *UserIsValidRequest) (*CheckProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserIsValid not implemented")
 }
-func (UnimplementedProfileServer) NameIsValid(context.Context, *NameIsValidRequest) (*SuccessResponse, error) {
+func (UnimplementedProfileServer) NameIsValid(context.Context, *NameIsValidRequest) (*CheckProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NameIsValid not implemented")
 }
-func (UnimplementedProfileServer) ServiceIsValid(context.Context, *ServiceIsValidRequest) (*SuccessResponse, error) {
+func (UnimplementedProfileServer) ServiceIsValid(context.Context, *ServiceIsValidRequest) (*CheckProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ServiceIsValid not implemented")
 }
 func (UnimplementedProfileServer) ChangeName(context.Context, *ChangeNameRequest) (*SuccessResponse, error) {
