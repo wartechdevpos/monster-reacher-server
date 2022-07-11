@@ -11,10 +11,10 @@ import (
 )
 
 const (
-	SERVICE_MAME_GOOGLE   = "GOOGLE"
-	SERVICE_MAME_FACEBOOK = "FACEBOOK"
-	SERVICE_MAME_TWITTER  = "TWITTER"
-	SERVICE_MAME_APPLE    = "APPLE"
+	SERVICE_MAME_GOOGLE   = "google"
+	SERVICE_MAME_FACEBOOK = "facebook"
+	SERVICE_MAME_TWITTER  = "twitter"
+	SERVICE_MAME_APPLE    = "apple"
 )
 
 type UserInfo struct {
@@ -69,7 +69,7 @@ func initOAuth2(oConfig *oauth2.Config, userUrl string, providerName string, opt
 }
 
 func NewOAuth2Provider(provider string) *oAuth2 {
-	switch strings.ToUpper(provider) {
+	switch strings.ToLower(provider) {
 	case SERVICE_MAME_GOOGLE:
 		return initOAuth2(getOAut2GoogleConfig())
 	case SERVICE_MAME_FACEBOOK:

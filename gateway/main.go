@@ -6,6 +6,7 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"wartech-studio.com/monster-reacher/gateway/api"
 	"wartech-studio.com/monster-reacher/gateway/services/gateway"
 	"wartech-studio.com/monster-reacher/libraries/config"
@@ -28,7 +29,7 @@ func main() {
 	defer listener.Close()
 
 	gateway.RegisterGatewayServer(server, gateway.NewGatewayServer())
-	//reflection.Register(server)
+	reflection.Register(server)
 	log.Println("gRPC server listening on " + listenHost)
 	err = server.Serve(listener)
 	if err != nil {
