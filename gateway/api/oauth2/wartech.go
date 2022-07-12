@@ -1,21 +1,14 @@
 package oauth2
 
 import (
-	"fmt"
-
 	"golang.org/x/oauth2"
-	"wartech-studio.com/monster-reacher/libraries/config"
 )
 
 const SERVICES_NAME = "wartech"
 
-var listenHost = fmt.Sprintf("%s:%d",
-	config.WartechConfig().Services[SERVICES_NAME].Hosts[0],
-	config.WartechConfig().Services[SERVICES_NAME].Ports[0])
-
-var (
-	ENDPOINT_WARTECH_AUTH  = listenHost + "/authorize"
-	ENDPOINT_WARTECH_TOKEN = listenHost + "/token"
+const (
+	ENDPOINT_WARTECH_AUTH  = "http://127.0.0.1.net:20521/authorize"
+	ENDPOINT_WARTECH_TOKEN = "http://127.0.0.1.net:20521/token"
 )
 
 func getOAut2WartechConfig() (*oauth2.Config, string, string) {
@@ -28,5 +21,5 @@ func getOAut2WartechConfig() (*oauth2.Config, string, string) {
 			AuthURL:  ENDPOINT_WARTECH_AUTH,
 			TokenURL: ENDPOINT_WARTECH_TOKEN,
 		},
-	}, listenHost + "/user", SERVICE_NAME_WARTECH
+	}, "http://127.0.0.1.net:20521/user", SERVICE_NAME_WARTECH
 }
