@@ -15,6 +15,7 @@ const (
 	SERVICE_MAME_FACEBOOK = "facebook"
 	SERVICE_MAME_TWITTER  = "twitter"
 	SERVICE_MAME_APPLE    = "apple"
+	SERVICE_NAME_WARTECH  = "wartech"
 )
 
 type UserInfo struct {
@@ -89,7 +90,8 @@ func NewOAuth2Provider(provider string) *oAuth2 {
 		return initOAuth2(getOAut2TwitterConfig())
 	case SERVICE_MAME_APPLE:
 		return initOAuth2(getOAut2AppleConfig())
+	case SERVICE_NAME_WARTECH:
+		return initOAuth2(getOAut2WartechConfig())
 	}
-
 	return nil
 }

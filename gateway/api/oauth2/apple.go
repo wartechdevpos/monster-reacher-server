@@ -16,8 +16,8 @@ func getOAut2AppleConfig() (*oauth2.Config, string, string) {
 		RedirectURL:  "https://insuanhouse.ddns.net:3000/auth/apple",
 		Scopes:       []string{"public_profile", "email"},
 		Endpoint: oauth2.Endpoint{
-			AuthURL:  ENDPOINT_FACEBOOK_AUTH,
-			TokenURL: ENDPOINT_FACEBOOK_TOKEN,
+			AuthURL:  ENDPOINT_APPLE_AUTH,
+			TokenURL: ENDPOINT_APPLE_TOKEN,
 		},
 	}, "https://graph.facebook.com/v14.0/me", SERVICE_MAME_APPLE
 }

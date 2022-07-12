@@ -50,6 +50,12 @@ func (db *mongodb) Close() error {
 }
 
 func MongoDBSelectOneQueryFilterOne(key string, value interface{}) interface{} {
+	_, ok := value.(string)
+	if key == "_id" && ok {
+		if id, err := primitive.ObjectIDFromHex(value.(string)); err == nil {
+			value = id
+		}
+	}
 	return bson.D{primitive.E{Key: key, Value: value}}
 }
 
