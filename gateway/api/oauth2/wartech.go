@@ -7,8 +7,9 @@ import (
 const SERVICES_NAME = "wartech"
 
 const (
-	ENDPOINT_WARTECH_AUTH  = "http://127.0.0.1.net:20560/authorize"
-	ENDPOINT_WARTECH_TOKEN = "http://127.0.0.1.net:20560/token"
+	ENDPOINT_WARTECH_AUTH  = "http://127.0.0.1:20560/authorize"
+	ENDPOINT_WARTECH_TOKEN = "http://127.0.0.1:20560/token"
+	ENDPOINT_WARTECH_USER  = "http://127.0.0.1:20560/user"
 )
 
 func getOAut2WartechConfig() (*oauth2.Config, string, string) {
@@ -21,5 +22,5 @@ func getOAut2WartechConfig() (*oauth2.Config, string, string) {
 			AuthURL:  ENDPOINT_WARTECH_AUTH,
 			TokenURL: ENDPOINT_WARTECH_TOKEN,
 		},
-	}, "http://127.0.0.1:20560/user", SERVICE_NAME_WARTECH
+	}, ENDPOINT_WARTECH_USER, SERVICE_NAME_WARTECH
 }
