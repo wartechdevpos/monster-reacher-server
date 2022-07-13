@@ -21,5 +21,5 @@ func getOAut2WartechConfig() (*oauth2.Config, string, string) {
 			AuthURL:  ENDPOINT_WARTECH_AUTH,
 			TokenURL: ENDPOINT_WARTECH_TOKEN,
 		},
-	}, "http://127.0.0.1.net:20560/user", SERVICE_NAME_WARTECH
+	}, "http://127.0.0.1:20560/user", SERVICE_NAME_WARTECH
 }
