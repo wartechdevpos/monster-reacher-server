@@ -7,9 +7,9 @@ import (
 const SERVICES_NAME = "wartech"
 
 const (
-	ENDPOINT_WARTECH_AUTH  = "http://127.0.0.1:20560/authorize"
-	ENDPOINT_WARTECH_TOKEN = "http://127.0.0.1:20560/token"
-	ENDPOINT_WARTECH_USER  = "http://127.0.0.1:20560/user"
+	ENDPOINT_WARTECH_AUTH  = "http://host.docker.internal:20560/authorize"
+	ENDPOINT_WARTECH_TOKEN = "http://host.docker.internal:20560/token"
+	ENDPOINT_WARTECH_USER  = "http://host.docker.internal:20560/user"
 )
 
 func getOAut2WartechConfig() (*oauth2.Config, string, string) {
