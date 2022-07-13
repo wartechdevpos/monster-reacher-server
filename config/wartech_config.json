@@ -8,10 +8,6 @@
             "hosts":["10.1.0.201"],
             "ports":[20531]
         },
-        "wartech" : {
-            "hosts":["10.1.0.99"],
-            "ports":[20521,20520]
-        },
         "authentication" : {
             "hosts":["10.1.0.100"],
             "ports":[20541]
@@ -19,6 +15,10 @@
         "profile" : {
             "hosts":["10.1.0.101"],
             "ports":[20551]
+        },
+        "wartech" : {
+            "hosts":["10.1.0.99"],
+            "ports":[20561,20560]
         }
     },
     "databases": {

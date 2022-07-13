@@ -11,7 +11,7 @@ services:
       context: ./manager
       args:
         - SERVICE_NAME=gateway
-        - GIT_COMMIT=bb8d8583d3dd8212ebdf0f1de190d24ca73f92b9
+        - GIT_COMMIT=0dd8180b1754c08fc2cf1f828242f9a813636409
     container_name: gateway
     entrypoint: /app/monster-reacher-server/gateway/gateway
     ports:
@@ -26,7 +26,7 @@ services:
       context: ./manager
       args:
         - SERVICE_NAME=services-discovery
-        - GIT_COMMIT=bb8d8583d3dd8212ebdf0f1de190d24ca73f92b9
+        - GIT_COMMIT=0dd8180b1754c08fc2cf1f828242f9a813636409
     container_name: services-discovery
     entrypoint: /app/monster-reacher-server/services-discovery/services-discovery
     ports:
@@ -37,12 +37,29 @@ services:
       privnet:
         ipv4_address: 10.1.0.201
 
+  microservice-wartech:
+    build:
+      context: ./microservices
+      args:
+        - SERVICE_NAME=wartech
+        - GIT_COMMIT=0dd8180b1754c08fc2cf1f828242f9a813636409
+    container_name: microservice-wartech
+    entrypoint: /app/monster-reacher-server/microservices/cmd/wartech/wartech
+    ports:
+      - 20560:20560
+      - 20561:20561
+    environment:
+      - TZ=Asia/Bangkok
+    networks:
+      privnet:
+        ipv4_address: 10.1.0.99
+
   microservice-authentication:
     build:
       context: ./microservices
       args:
         - SERVICE_NAME=authentication
-        - GIT_COMMIT=bb8d8583d3dd8212ebdf0f1de190d24ca73f92b9
+        - GIT_COMMIT=0dd8180b1754c08fc2cf1f828242f9a813636409
     container_name: microservice-authentication
     entrypoint: /app/monster-reacher-server/microservices/cmd/authentication/authentication
     ports:
@@ -58,7 +75,7 @@ services:
       context: ./microservices
       args:
         - SERVICE_NAME=profile
-        - GIT_COMMIT=bb8d8583d3dd8212ebdf0f1de190d24ca73f92b9
+        - GIT_COMMIT=0dd8180b1754c08fc2cf1f828242f9a813636409
     container_name: microservice-profile
     entrypoint: /app/monster-reacher-server/microservices/cmd/profile/profile
     ports:
