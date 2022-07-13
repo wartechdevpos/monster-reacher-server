@@ -58,7 +58,7 @@ func initOAuth2Server() {
 	clientStore.Set("85462020023651", &models.Client{
 		ID:     "85462020023651",
 		Secret: "ac29c66a3bb016d2c632a3a7dc5130b",
-		Domain: "http://localhost",
+		Domain: "https://insuanhouse.ddns.net:3000",
 	})
 	manager.MapClientStorage(clientStore)
 
