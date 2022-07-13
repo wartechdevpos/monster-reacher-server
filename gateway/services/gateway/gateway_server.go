@@ -24,4 +24,11 @@ func (*gatewayServer) Authentication(ctx context.Context, req *AuthenticationReq
 	}, nil
 }
 
+func (*gatewayServer) WartechRegister(ctx context.Context, req *WartechRegisterRequest) (*WartechRegisterReasponse, error) {
+	success, err := bff.WartechRegister(req.GetUsername(), req.GetEmail(), req.GetPassword(), req.GetBirthday())
+	return &WartechRegisterReasponse{
+		IsSuccess: success,
+	}, err
+}
+
 func (*gatewayServer) mustEmbedUnimplementedGatewayServer() {}

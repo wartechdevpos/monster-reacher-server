@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GatewayClient interface {
 	Authentication(ctx context.Context, in *AuthenticationRequest, opts ...grpc.CallOption) (*AuthenticationReasponse, error)
+	WartechRegister(ctx context.Context, in *WartechRegisterRequest, opts ...grpc.CallOption) (*WartechRegisterReasponse, error)
 }
 
 type gatewayClient struct {
@@ -42,11 +43,21 @@ func (c *gatewayClient) Authentication(ctx context.Context, in *AuthenticationRe
 	return out, nil
 }
 
+func (c *gatewayClient) WartechRegister(ctx context.Context, in *WartechRegisterRequest, opts ...grpc.CallOption) (*WartechRegisterReasponse, error) {
+	out := new(WartechRegisterReasponse)
+	err := c.cc.Invoke(ctx, "/gateway.Gateway/WartechRegister", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GatewayServer is the server API for Gateway service.
 // All implementations must embed UnimplementedGatewayServer
 // for forward compatibility
 type GatewayServer interface {
 	Authentication(context.Context, *AuthenticationRequest) (*AuthenticationReasponse, error)
+	WartechRegister(context.Context, *WartechRegisterRequest) (*WartechRegisterReasponse, error)
 	mustEmbedUnimplementedGatewayServer()
 }
 
@@ -56,6 +67,9 @@ type UnimplementedGatewayServer struct {
 
 func (UnimplementedGatewayServer) Authentication(context.Context, *AuthenticationRequest) (*AuthenticationReasponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Authentication not implemented")
+}
+func (UnimplementedGatewayServer) WartechRegister(context.Context, *WartechRegisterRequest) (*WartechRegisterReasponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WartechRegister not implemented")
 }
 func (UnimplementedGatewayServer) mustEmbedUnimplementedGatewayServer() {}
 
@@ -88,6 +102,24 @@ func _Gateway_Authentication_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Gateway_WartechRegister_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WartechRegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayServer).WartechRegister(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gateway.Gateway/WartechRegister",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServer).WartechRegister(ctx, req.(*WartechRegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Gateway_ServiceDesc is the grpc.ServiceDesc for Gateway service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +130,10 @@ var Gateway_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Authentication",
 			Handler:    _Gateway_Authentication_Handler,
+		},
+		{
+			MethodName: "WartechRegister",
+			Handler:    _Gateway_WartechRegister_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
