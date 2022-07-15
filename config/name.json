@@ -1,7 +1,7 @@
 {
     "service_name":{
         "gateway":"gateway",
-        "service_discovery":"service_discovery"
+        "service_discovery":"service-discovery"
     },
     "microservice_name":{
         "wartech":"wartech",
