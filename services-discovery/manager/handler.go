@@ -74,12 +74,12 @@ func CheckServiceIsOnline(ctx context.Context, req *services_discovery.CheckServ
 }
 
 func GetServices(context.Context, *services_discovery.GetServicesRequest) (*services_discovery.GetServicesresponse, error) {
-	services := []*services_discovery.ServiceInfo{}
+	servicesRes := []*services_discovery.ServiceInfo{}
 
 	for k := range services {
-		services = append(services, services[k])
+		servicesRes = append(servicesRes, services[k])
 	}
 	return &services_discovery.GetServicesresponse{
-		Services: services,
+		Services: servicesRes,
 	}, nil
 }

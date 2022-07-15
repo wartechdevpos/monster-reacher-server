@@ -45,6 +45,7 @@ func main() {
 }
 
 func initServicesDiscovery() {
+	//serviceName := config.GetNameConfig().ServiceName.ServiceDiscovery
 	servicesDiscoveryHost := fmt.Sprintf("%s:%d",
 		config.GetServiceConfig().Services["services-discovery"].Hosts[0],
 		config.GetServiceConfig().Services["services-discovery"].Ports[0])
