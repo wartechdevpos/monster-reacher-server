@@ -10,8 +10,8 @@ const name_config_name = "name"
 
 type nameConfig struct {
 	ServiceName struct {
-		Gateway          string `json:"gateway"`
-		ServiceDiscovery string `json:"service_discovery"`
+		Gateway           string `json:"gateway"`
+		ServicesDiscovery string `json:"services_discovery"`
 	} `json:"service_name"`
 	MicroServiceName struct {
 		Wartech        string `json:"wartech"`

@@ -11,7 +11,7 @@ import (
 	"wartech-studio.com/monster-reacher/services-discovery/manager"
 )
 
-var SERVICES_NAME = config.GetNameConfig().ServiceName.ServiceDiscovery
+var SERVICES_NAME = config.GetNameConfig().ServiceName.ServicesDiscovery
 
 var listenHost = fmt.Sprintf("%s:%d",
 	config.GetServiceConfig().Services[SERVICES_NAME].Hosts[0],

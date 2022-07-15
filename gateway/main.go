@@ -45,10 +45,10 @@ func main() {
 }
 
 func initServicesDiscovery() {
-	//serviceName := config.GetNameConfig().ServiceName.ServiceDiscovery
+	serviceName := config.GetNameConfig().ServiceName.ServicesDiscovery
 	servicesDiscoveryHost := fmt.Sprintf("%s:%d",
-		config.GetServiceConfig().Services["services-discovery"].Hosts[0],
-		config.GetServiceConfig().Services["services-discovery"].Ports[0])
+		config.GetServiceConfig().Services[serviceName].Hosts[0],
+		config.GetServiceConfig().Services[serviceName].Ports[0])
 	go api.ServicesDiscoveryCache.Start(servicesDiscoveryHost)
 }
 
