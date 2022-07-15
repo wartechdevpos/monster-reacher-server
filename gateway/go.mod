@@ -9,6 +9,8 @@ require (
 	wartech-studio.com/monster-reacher/libraries v1.0.0
 )
 
+require github.com/srikrsna/protoc-gen-gotag v0.6.2 // indirect
+
 require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	golang.org/x/net v0.0.0-20220630215102-69896b714898 // indirect

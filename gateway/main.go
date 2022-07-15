@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -8,15 +9,16 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"wartech-studio.com/monster-reacher/gateway/api"
-	"wartech-studio.com/monster-reacher/gateway/services/gateway"
+	"wartech-studio.com/monster-reacher/gateway/bff"
 	"wartech-studio.com/monster-reacher/libraries/config"
+	"wartech-studio.com/monster-reacher/libraries/protobuf/gateway"
 )
 
 const SERVICES_NAME = "gateway"
 
 var listenHost = fmt.Sprintf("%s:%d",
-	config.WartechConfig().Services[SERVICES_NAME].Hosts[0],
-	config.WartechConfig().Services[SERVICES_NAME].Ports[0])
+	config.GetServiceConfig().Services[SERVICES_NAME].Hosts[0],
+	config.GetServiceConfig().Services[SERVICES_NAME].Ports[0])
 
 func main() {
 	initServicesDiscovery()
@@ -28,7 +30,12 @@ func main() {
 
 	defer listener.Close()
 
-	gateway.RegisterGatewayServer(server, gateway.NewGatewayServer())
+	service := gateway.NewGatewayServer()
+
+	service.AuthenticationHandler = Authentication
+	service.WartechRegisterHandler = WartechRegister
+
+	gateway.RegisterGatewayServer(server, service)
 	reflection.Register(server)
 	log.Println("gRPC server listening on " + listenHost)
 	err = server.Serve(listener)
@@ -39,7 +46,26 @@ func main() {
 
 func initServicesDiscovery() {
 	servicesDiscoveryHost := fmt.Sprintf("%s:%d",
-		config.WartechConfig().Services["services-discovery"].Hosts[0],
-		config.WartechConfig().Services["services-discovery"].Ports[0])
+		config.GetServiceConfig().Services["services-discovery"].Hosts[0],
+		config.GetServiceConfig().Services["services-discovery"].Ports[0])
 	go api.ServicesDiscoveryCache.Start(servicesDiscoveryHost)
+}
+
+func Authentication(ctx context.Context, req *gateway.AuthenticationRequest) (*gateway.AuthenticationReasponse, error) {
+	id, isNew, token, err := bff.Authentication(req.GetServiceName(), req.GetServiceAuthCode())
+	if err != nil {
+		return nil, err
+	}
+	return &gateway.AuthenticationReasponse{
+		IsNew: isNew,
+		Token: token,
+		Id:    id,
+	}, nil
+}
+
+func WartechRegister(ctx context.Context, req *gateway.WartechRegisterRequest) (*gateway.WartechRegisterReasponse, error) {
+	success, err := bff.WartechRegister(req.GetUsername(), req.GetEmail(), req.GetPassword(), req.GetBirthday())
+	return &gateway.WartechRegisterReasponse{
+		IsSuccess: success,
+	}, err
 }

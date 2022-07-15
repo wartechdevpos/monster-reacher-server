@@ -13,8 +13,8 @@ import (
 const SERVICES_NAME = "services-discovery"
 
 var listenHost = fmt.Sprintf("%s:%d",
-	config.WartechConfig().Services[SERVICES_NAME].Hosts[0],
-	config.WartechConfig().Services[SERVICES_NAME].Ports[0])
+	config.GetServiceConfig().Services[SERVICES_NAME].Hosts[0],
+	config.GetServiceConfig().Services[SERVICES_NAME].Ports[0])
 
 func main() {
 	server := grpc.NewServer()

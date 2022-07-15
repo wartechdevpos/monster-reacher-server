@@ -1,0 +1,29 @@
+{
+    "services": {
+        "gateway" : {
+            "hosts":["127.0.0.1"],
+            "ports":[20530]
+        },
+        "services-discovery" : {
+            "hosts":["127.0.0.1"],
+            "ports":[20531]
+        },
+        "authentication" : {
+            "hosts":["127.0.0.1"],
+            "ports":[20541]
+        },
+        "profile" : {
+            "hosts":["127.0.0.1"],
+            "ports":[20551]
+        },
+        "wartech" : {
+            "hosts":["127.0.0.1"],
+            "ports":[20561,20560]
+        }
+    },
+    "databases": {
+        "mongodb": {
+            "host": "mongodb://docker:mongopw@127.0.0.1:49153"
+        }
+    }
+}

@@ -9,11 +9,14 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"wartech-studio.com/monster-reacher/gateway/api"
-	"wartech-studio.com/monster-reacher/gateway/services/wartech"
+	"wartech-studio.com/monster-reacher/libraries/config"
+	"wartech-studio.com/monster-reacher/libraries/protobuf/wartech"
 )
 
 func WartechRegister(username, email, password, birthday string) (bool, error) {
-	serivces, ok := api.ServicesDiscoveryCache.CheckRequireServices([]string{"wartech"})
+	serivces, ok := api.ServicesDiscoveryCache.CheckRequireServices([]string{
+		config.GetNameConfig().MicroServiceName.Wartech,
+	})
 	if !ok {
 		return false, errors.New("service profile,authentication is offline")
 	}
@@ -22,13 +25,13 @@ func WartechRegister(username, email, password, birthday string) (bool, error) {
 		return false, err
 	}
 
-	cc, err := grpc.Dial(serivces["wartech"].GetHost(), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	cc, err := grpc.Dial(serivces[config.GetNameConfig().MicroServiceName.Wartech].GetHost(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return false, err
 	}
 	defer cc.Close()
 
-	c := wartech.NewWartechUserClient(cc)
+	c := wartech.NewWartechClient(cc)
 	ctx, cancle := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancle()
 	birthdayTime, _ := time.Parse("01-02-06", birthday)

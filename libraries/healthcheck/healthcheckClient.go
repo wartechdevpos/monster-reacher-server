@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/connectivity"
 	"google.golang.org/grpc/credentials/insecure"
 	"wartech-studio.com/monster-reacher/libraries/config"
-	"wartech-studio.com/monster-reacher/libraries/healthcheck/services/services_discovery"
+	"wartech-studio.com/monster-reacher/libraries/protobuf/services_discovery"
 )
 
 type HealthCheckClient interface {
@@ -30,8 +30,8 @@ func (hc *healthCheckClient) Start(name string, host string) {
 	hc.name = name
 	hc.host = host
 	serviceDiscoveryHost := fmt.Sprintf("%s:%d",
-		config.WartechConfig().Services["services-discovery"].Hosts[0],
-		config.WartechConfig().Services["services-discovery"].Ports[0])
+		config.GetServiceConfig().Services["services-discovery"].Hosts[0],
+		config.GetServiceConfig().Services["services-discovery"].Ports[0])
 	cc, err := grpc.Dial(serviceDiscoveryHost, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {

@@ -3,6 +3,7 @@ module wartech-studio.com/monster-reacher/libraries
 go 1.18
 
 require (
+	github.com/srikrsna/protoc-gen-gotag v0.6.2
 	go.mongodb.org/mongo-driver v1.9.1
 	google.golang.org/grpc v1.47.0
 	google.golang.org/protobuf v1.28.0
@@ -18,10 +19,10 @@ require (
 	github.com/xdg-go/scram v1.0.2 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
-	golang.org/x/crypto v0.0.0-20201216223049-8b5274cf687f // indirect
-	golang.org/x/net v0.0.0-20201021035429-f5854403a974 // indirect
-	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
-	golang.org/x/sys v0.0.0-20210119212857-b64e53b001e4 // indirect
-	golang.org/x/text v0.3.5 // indirect
-	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
+	golang.org/x/crypto v0.0.0-20211108221036-ceb1ce70b4fa // indirect
+	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect
+	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a // indirect
+	golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1 // indirect
+	golang.org/x/text v0.3.7 // indirect
+	google.golang.org/genproto v0.0.0-20210226172003-ab064af71705 // indirect
 )

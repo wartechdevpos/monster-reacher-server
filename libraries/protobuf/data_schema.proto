@@ -1,0 +1,30 @@
+syntax="proto3";
+
+import "tagger/tagger.proto";
+import "google/protobuf/timestamp.proto";
+
+package data_schema;
+
+option go_package="wartech-studio.com/monster-reacher/libraries/protobuf/data_schema;data_schema";
+
+message WartechUserData {
+    string id = 1 [(tagger.tags) = "bson:\"_id,omitempty\"" ];
+    string user = 2 [(tagger.tags) = "bson:\"user\"" ];
+    string email = 3 [(tagger.tags) = "bson:\"email\"" ];
+    string password = 4 [(tagger.tags) = "bson:\"password\"" ];
+    bool email_confirmed = 5 [(tagger.tags) = "bson:\"email_confirmed\"" ];
+    google.protobuf.Timestamp birthday = 6 [(tagger.tags) = "bson:\"birthday\"" ];
+}
+
+message ProfileData {
+    string id = 1 [(tagger.tags) = "bson:\"_id,omitempty\"" ];
+    string name = 2 [(tagger.tags) = "bson:\"name\"" ];
+    map<string,string> services = 3 [(tagger.tags) = "bson:\"services\"" ];
+}
+
+message AuthenticationData {
+    string id = 1 [(tagger.tags) = "bson:\"id\"" ];
+	google.protobuf.Timestamp create_timestamp = 2 [(tagger.tags) = "bson:\"create_timestamp\"" ];
+	string access_token = 3 [(tagger.tags) = "bson:\"access_token\"" ];
+	int64 extend_count = 4 [(tagger.tags) = "bson:\"extend_count\"" ];
+}

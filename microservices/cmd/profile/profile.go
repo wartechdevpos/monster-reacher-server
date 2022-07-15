@@ -8,14 +8,15 @@ import (
 	"google.golang.org/grpc"
 	"wartech-studio.com/monster-reacher/libraries/config"
 	"wartech-studio.com/monster-reacher/libraries/healthcheck"
-	"wartech-studio.com/monster-reacher/microservices/services/profile"
+	"wartech-studio.com/monster-reacher/libraries/protobuf/profile"
+	"wartech-studio.com/monster-reacher/microservices/cmd/profile/manager"
 )
 
-const SERVICES_NAME = "profile"
+var SERVICES_NAME = config.GetNameConfig().MicroServiceName.Profile
 
 var listenHost = fmt.Sprintf("%s:%d",
-	config.WartechConfig().Services[SERVICES_NAME].Hosts[0],
-	config.WartechConfig().Services[SERVICES_NAME].Ports[0])
+	config.GetServiceConfig().Services[SERVICES_NAME].Hosts[0],
+	config.GetServiceConfig().Services[SERVICES_NAME].Ports[0])
 
 func main() {
 	server := grpc.NewServer()
@@ -29,7 +30,20 @@ func main() {
 
 	defer listener.Close()
 
-	profile.RegisterProfileServer(server, profile.NewProfileServer())
+	service := profile.NewProfileServer()
+
+	service.GetDataHandler = manager.GetData
+	service.AuthenticationHandler = manager.Authentication
+	service.RegisterHandler = manager.Register
+	service.UserIsValidHandler = manager.UserIsValid
+	service.NameIsValidHandler = manager.NameIsValid
+	service.ServiceIsValidHandler = manager.ServiceIsValid
+	service.ChangeNameHandler = manager.ChangeName
+	service.AddServiceAuthHandler = manager.AddServiceAuth
+	service.RemoveServiceAuthHandler = manager.RemoveServiceAuth
+	service.MergeDataHandler = manager.MergeData
+
+	profile.RegisterProfileServer(server, service)
 	//reflection.Register(server)
 	log.Println("gRPC server listening on " + listenHost)
 	err = server.Serve(listener)

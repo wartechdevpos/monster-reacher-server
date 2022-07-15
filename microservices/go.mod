@@ -5,7 +5,6 @@ go 1.18
 require (
 	github.com/go-oauth2/oauth2/v4 v4.5.1
 	google.golang.org/grpc v1.47.0
-	google.golang.org/protobuf v1.28.0
 	wartech-studio.com/monster-reacher/libraries v1.0.0
 )
 
@@ -17,6 +16,7 @@ require (
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/srikrsna/protoc-gen-gotag v0.6.2 // indirect
 	github.com/tidwall/btree v0.0.0-20191029221954-400434d76274 // indirect
 	github.com/tidwall/buntdb v1.1.2 // indirect
 	github.com/tidwall/gjson v1.12.1 // indirect
@@ -32,10 +32,11 @@ require (
 	go.mongodb.org/mongo-driver v1.9.1 // indirect
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
-	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
+	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a // indirect
 	golang.org/x/sys v0.0.0-20220227234510-4e6760a101f9 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
+	google.golang.org/genproto v0.0.0-20210226172003-ab064af71705 // indirect
+	google.golang.org/protobuf v1.28.0 // indirect
 )
 
 replace wartech-studio.com/monster-reacher/libraries => ../libraries

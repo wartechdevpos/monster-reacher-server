@@ -13,25 +13,24 @@ import (
 
 	"wartech-studio.com/monster-reacher/gateway/api"
 	"wartech-studio.com/monster-reacher/gateway/api/oauth2"
-	"wartech-studio.com/monster-reacher/gateway/services/authentication"
-	"wartech-studio.com/monster-reacher/gateway/services/profile"
-	"wartech-studio.com/monster-reacher/gateway/services/services_discovery"
+	"wartech-studio.com/monster-reacher/libraries/config"
+	"wartech-studio.com/monster-reacher/libraries/protobuf/authentication"
+	"wartech-studio.com/monster-reacher/libraries/protobuf/profile"
+	"wartech-studio.com/monster-reacher/libraries/protobuf/services_discovery"
 )
 
-func Authentication(user string, password string, email string, serviceName string, serviceAuthCode string) (id string, isNew bool, token string, err error) {
-	serivces, ok := api.ServicesDiscoveryCache.CheckRequireServices([]string{"authentication", "profile"})
+func Authentication(serviceName string, serviceAuthCode string) (id string, isNew bool, token string, err error) {
+	serivces, ok := api.ServicesDiscoveryCache.CheckRequireServices([]string{
+		config.GetNameConfig().MicroServiceName.Authentication,
+		config.GetNameConfig().MicroServiceName.Profile})
 	serviceName = strings.ToLower(serviceName)
 	if !ok {
 		err = errors.New("service profile,authentication is offline")
 		return
 	}
 
-	if user != "" {
-		if id, isNew, err = RegisterByUser(serivces["profile"], user, password, email); err != nil {
-			return
-		}
-	} else if serviceName != "" {
-		if id, isNew, err = RegisterByService(serivces["profile"], serviceName, serviceAuthCode); err != nil {
+	if serviceName != "" {
+		if id, isNew, err = Register(serivces[config.GetNameConfig().MicroServiceName.Profile], serviceName, serviceAuthCode); err != nil {
 			return
 		}
 	} else {
@@ -39,7 +38,7 @@ func Authentication(user string, password string, email string, serviceName stri
 		return
 	}
 
-	cc, err := grpc.Dial(serivces["authentication"].GetHost(), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	cc, err := grpc.Dial(serivces[config.GetNameConfig().MicroServiceName.Authentication].GetHost(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return
 	}
@@ -56,47 +55,7 @@ func Authentication(user string, password string, email string, serviceName stri
 	return
 }
 
-func RegisterByUser(profileService *services_discovery.ServiceInfo, user string, password string, email string) (id string, isNew bool, err error) {
-
-	if user == "" || password == "" || email == "" {
-		err = fmt.Errorf("some a param is empty. please check params user,password,email")
-		return
-	}
-
-	if profileService == nil {
-		err = errors.New("services profile is offline")
-		return
-	}
-
-	cc, err := grpc.Dial(profileService.GetHost(), grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		err = fmt.Errorf("serivces Dial is error %s", err.Error())
-		return
-	}
-	defer cc.Close()
-
-	ctx, cancle := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancle()
-
-	c := profile.NewProfileClient(cc)
-	var result *profile.CheckProfileResponse
-	if result, err = c.Authentication(ctx, &profile.AuthenticationRequest{User: user, Password: password}); err == nil && result.GetId() != "" {
-		id = result.GetId()
-		return
-	}
-
-	var resultRegister *profile.RegisterResponse = nil
-	if resultRegister, err = c.Register(ctx, &profile.RegisterRequest{
-		User:     user,
-		Password: password,
-		Email:    email,
-	}); err != nil {
-		return
-	}
-	return resultRegister.GetId(), true, nil
-}
-
-func RegisterByService(profileService *services_discovery.ServiceInfo, serviceName string, serviceAuthCode string) (id string, isNew bool, err error) {
+func Register(profileService *services_discovery.ServiceInfo, serviceName string, serviceAuthCode string) (id string, isNew bool, err error) {
 
 	if serviceName == "" || serviceAuthCode == "" {
 		err = errors.New("some a param is empty. please check params service_name,service_token")
@@ -137,22 +96,46 @@ func RegisterByService(profileService *services_discovery.ServiceInfo, serviceNa
 
 	c := profile.NewProfileClient(cc)
 
-	var result *profile.CheckProfileResponse = nil
-	if result, err = c.AuthenticationByService(ctx, &profile.AuthenticationByServiceRequest{Name: serviceName, Id: provider.GetData().ID}); err == nil && result.GetId() != "" {
+	var result *profile.AuthenticationResponse = nil
+
+	if result, err = c.Authentication(ctx, &profile.AuthenticationRequest{ServiceName: serviceName, ServiceId: provider.GetData().GetId()}); err == nil && result.GetId() != "" {
 		id = result.GetId()
 		return
 	}
 	var resultRegister *profile.RegisterResponse = nil
-	if resultRegister, err = c.RegisterByService(ctx, &profile.RegisterByServiceRequest{
-		Name: provider.GetServiceName(),
-		Id:   provider.GetData().ID,
+	if resultRegister, err = c.Register(ctx, &profile.RegisterRequest{
+		ServiceName: provider.GetServiceName(),
+		ServiceId:   provider.GetData().GetId(),
 	}); err != nil {
 		return
 	}
 
 	if resultRegister.GetId() == "" {
-		err = fmt.Errorf("service %s id %s register fail", provider.GetServiceName(), provider.GetData().ID)
+		err = fmt.Errorf("service %s id %s register fail", provider.GetServiceName(), provider.GetData().GetId())
 		return
 	}
 	return resultRegister.GetId(), true, nil
+}
+
+func GetAuthTokenData(ctx context.Context, token string) (id string, err error) {
+	serivces, ok := api.ServicesDiscoveryCache.CheckRequireServices([]string{
+		config.GetNameConfig().MicroServiceName.Authentication,
+	})
+	if !ok {
+		err = errors.New("service authentication is offline")
+		return
+	}
+
+	cc, err := grpc.Dial(serivces[config.GetNameConfig().MicroServiceName.Authentication].GetHost(), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return
+	}
+	defer cc.Close()
+
+	c := authentication.NewAuthenticationClient(cc)
+	resSignIn, err := c.SignIn(ctx, &authentication.SignInRequest{AccessToken: token})
+	if err != nil {
+		return
+	}
+	return resSignIn.GetId(), nil
 }

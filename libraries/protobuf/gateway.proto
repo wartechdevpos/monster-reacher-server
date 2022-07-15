@@ -1,0 +1,43 @@
+syntax="proto3";
+
+import "data_schema.proto";
+
+package gateway;
+option go_package="wartech-studio.com/monster-reacher/libraries/protobuf/gateway;gateway";
+
+service Gateway {
+    rpc Authentication(AuthenticationRequest) returns(AuthenticationReasponse);
+    rpc WartechRegister(WartechRegisterRequest) returns(WartechRegisterReasponse);
+    rpc GetProfileData(GetProfileDataRequest) returns(GetProfileDataReasponse);
+}
+
+message AuthenticationRequest {
+    string user = 1;
+    string password = 2;
+    string email = 3;
+    string service_name = 4;
+    string service_auth_code = 5;
+}
+message AuthenticationReasponse {
+    bool is_new = 1;
+    string token = 2;
+    string id = 3;
+}
+
+message WartechRegisterRequest {
+    string username=1;
+    string email=2;
+    string password=3;
+    string birthday=4;
+}
+message WartechRegisterReasponse {
+    bool is_success=1;
+}
+
+message GetProfileDataRequest {
+    string token = 1;
+    string id = 2;
+}
+message GetProfileDataReasponse {
+    data_schema.ProfileData data = 1;
+}

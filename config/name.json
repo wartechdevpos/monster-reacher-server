@@ -1,0 +1,12 @@
+{
+    "service_name":{
+        "gateway":"gateway",
+        "service_discovery":"service_discovery"
+    },
+    "microservice_name":{
+        "wartech":"wartech",
+        "authentication":"authentication",
+        "profile":"profile",
+        "character":"character"
+    }
+}

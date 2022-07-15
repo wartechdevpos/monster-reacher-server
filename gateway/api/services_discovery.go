@@ -7,7 +7,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"wartech-studio.com/monster-reacher/gateway/services/services_discovery"
+	"wartech-studio.com/monster-reacher/libraries/protobuf/services_discovery"
 )
 
 type ServicesDiscovery interface {

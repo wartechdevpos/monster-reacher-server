@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
-	"strings"
 
 	"golang.org/x/oauth2"
+	"wartech-studio.com/monster-reacher/libraries/config"
+	"wartech-studio.com/monster-reacher/libraries/protobuf/data_schema"
 )
 
 const (
@@ -18,17 +19,11 @@ const (
 	SERVICE_NAME_WARTECH  = "wartech"
 )
 
-type UserInfo struct {
-	ID    string `json:"id"`
-	Email string `json:"email"`
-	Name  string `json:"name"`
-}
-
 type oAuth2 struct {
 	oConfig      *oauth2.Config
 	userUrl      string
 	opts         []oauth2.AuthCodeOption
-	userInfo     *UserInfo
+	userInfo     *data_schema.AuthenticationData
 	providerName string
 }
 
@@ -52,13 +47,13 @@ func (authPtr *oAuth2) SubmitAuth(tokenCode string) error {
 	if err != nil {
 		return err
 	}
-	authPtr.userInfo = &UserInfo{}
+	authPtr.userInfo = &data_schema.AuthenticationData{}
 	json.Unmarshal(bodyBytes, authPtr.userInfo)
 
 	// for twiiter
-	if authPtr.userInfo.ID == "" {
+	if authPtr.userInfo.GetId() == "" {
 		type DatauserInfo struct {
-			Data UserInfo
+			Data data_schema.AuthenticationData
 		}
 		datauserInfo := &DatauserInfo{}
 		json.Unmarshal(bodyBytes, datauserInfo)
@@ -67,8 +62,8 @@ func (authPtr *oAuth2) SubmitAuth(tokenCode string) error {
 
 	return nil
 }
-func (authPtr *oAuth2) GetData() *UserInfo     { return authPtr.userInfo }
-func (authPtr *oAuth2) GetServiceName() string { return authPtr.providerName }
+func (authPtr *oAuth2) GetData() *data_schema.AuthenticationData { return authPtr.userInfo }
+func (authPtr *oAuth2) GetServiceName() string                   { return authPtr.providerName }
 
 func initOAuth2(oConfig *oauth2.Config, userUrl string, providerName string, opts ...oauth2.AuthCodeOption) *oAuth2 {
 	return &oAuth2{
@@ -81,17 +76,24 @@ func initOAuth2(oConfig *oauth2.Config, userUrl string, providerName string, opt
 }
 
 func NewOAuth2Provider(provider string) *oAuth2 {
-	switch strings.ToLower(provider) {
-	case SERVICE_MAME_GOOGLE:
-		return initOAuth2(getOAut2GoogleConfig())
-	case SERVICE_MAME_FACEBOOK:
-		return initOAuth2(getOAut2FacebookConfig())
-	case SERVICE_MAME_TWITTER:
-		return initOAuth2(getOAut2TwitterConfig())
-	case SERVICE_MAME_APPLE:
-		return initOAuth2(getOAut2AppleConfig())
-	case SERVICE_NAME_WARTECH:
-		return initOAuth2(getOAut2WartechConfig())
+	oauth2Config := config.GetOAuth2Config()[provider]
+	if oauth2Config == nil {
+		return nil
 	}
-	return nil
+	oConfig := &oauth2.Config{
+		ClientID:     oauth2Config.ClientId,
+		ClientSecret: oauth2Config.ClientSecret,
+		RedirectURL:  oauth2Config.RedirectUrl,
+		Scopes:       oauth2Config.Scopes,
+		Endpoint: oauth2.Endpoint{
+			AuthURL:  oauth2Config.Endpoint.AuthUrl,
+			TokenURL: oauth2Config.Endpoint.TokenUrl,
+		},
+	}
+	opts := []oauth2.AuthCodeOption{}
+
+	for k, v := range oauth2Config.Params {
+		opts = append(opts, oauth2.SetAuthURLParam(k, v))
+	}
+	return initOAuth2(oConfig, oauth2Config.Endpoint.UserUrl, provider, opts...)
 }
