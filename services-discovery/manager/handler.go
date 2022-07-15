@@ -16,6 +16,7 @@ func NewServerService() services_discovery.ServicesDiscoveryServer {
 	service.HealthCheckHandler = HealthCheck
 	service.CheckServiceIsOnlineHandler = CheckServiceIsOnline
 	service.GetServicesHandler = GetServices
+	services = make(map[string]*services_discovery.ServiceInfo)
 	return service
 }
 
