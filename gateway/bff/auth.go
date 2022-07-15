@@ -98,7 +98,7 @@ func Register(profileService *services_discovery.ServiceInfo, serviceName string
 
 	var result *profile.AuthenticationResponse = nil
 
-	if result, err = c.Authentication(ctx, &profile.AuthenticationRequest{ServiceName: serviceName, ServiceId: provider.GetData().GetId()}); err == nil && result.GetId() != "" {
+	if result, err = c.Authentication(ctx, &profile.AuthenticationRequest{ServiceName: provider.GetServiceName(), ServiceId: provider.GetData().GetId()}); err == nil && result.GetId() != "" {
 		id = result.GetId()
 		return
 	}

@@ -36,7 +36,7 @@ func GetData(ctx context.Context, req *profile.GetDataRequest) (*profile.GetData
 func Authentication(ctx context.Context, req *profile.AuthenticationRequest) (*profile.AuthenticationResponse, error) {
 	driver := getDriver()
 	defer driver.Close()
-	filter := database.MongoDBSelectOneQueryFilterOne("serviceAuth."+req.GetServiceName(), req.GetServiceId())
+	filter := database.MongoDBSelectOneQueryFilterOne("services."+req.GetServiceName(), req.GetServiceId())
 	data, err := getProfileData(ctx, driver, filter)
 	if err != nil {
 		return nil, err
