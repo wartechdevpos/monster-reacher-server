@@ -11,6 +11,14 @@ import (
 	"wartech-studio.com/monster-reacher/libraries/protobuf/data_schema"
 )
 
+func NewServerService() authentication.AuthenticationServer {
+	service := authentication.NewAuthenticationServer()
+	service.SignUpHandler = SignUp
+	service.SignInHandler = SignIn
+	service.SignOutHandler = SignOut
+	return service
+}
+
 func SignUp(ctx context.Context, req *authentication.SignUpRequest) (*authentication.SignUpResponse, error) {
 	dbDriver := getDriver()
 	defer dbDriver.Close()

@@ -8,7 +8,6 @@ service ServicesDiscovery {
     rpc HealthCheck(stream HealthCheckRequest) returns(stream HealthCheckResponse);
     rpc CheckServiceIsOnline(CheckServiceIsOnlineRequest) returns(CheckServiceIsOnlineResponse);
     rpc GetServices(GetServicesRequest) returns(GetServicesresponse);
-    rpc GatewaySocket(stream GatewaySocketRequest) returns(stream GatewaySocketResponse);
 }
 
 message RegisterRequest {
@@ -47,11 +46,3 @@ message GetServicesRequest {}
 message GetServicesresponse {
     repeated ServiceInfo services = 1;
 }
-
-message GatewaySocketRequest {
-
-}
-message GatewaySocketResponse {
-    
-}
-

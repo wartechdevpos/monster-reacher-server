@@ -7,7 +7,8 @@ import (
 
 	"google.golang.org/grpc"
 	"wartech-studio.com/monster-reacher/libraries/config"
-	"wartech-studio.com/monster-reacher/services-discovery/services_discovery"
+	"wartech-studio.com/monster-reacher/libraries/protobuf/services_discovery"
+	"wartech-studio.com/monster-reacher/services-discovery/manager"
 )
 
 const SERVICES_NAME = "services-discovery"
@@ -26,7 +27,7 @@ func main() {
 
 	defer listener.Close()
 
-	services_discovery.RegisterServicesDiscoveryServer(server, services_discovery.NewServicesDiscoveryServer())
+	services_discovery.RegisterServicesDiscoveryServer(server, manager.NewServerService())
 
 	log.Println("services-discovery listening on " + listenHost)
 	err = server.Serve(listener)

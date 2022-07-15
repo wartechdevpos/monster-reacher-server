@@ -30,12 +30,7 @@ func main() {
 
 	defer listener.Close()
 
-	service := authentication.NewAuthenticationServer()
-	service.SignUpHandler = manager.SignUp
-	service.SignInHandler = manager.SignIn
-	service.SignOutHandler = manager.SignOut
-
-	authentication.RegisterAuthenticationServer(server, authentication.NewAuthenticationServer())
+	authentication.RegisterAuthenticationServer(server, manager.NewServerService())
 	//reflection.Register(server)
 	log.Println("gRPC server listening on " + listenHost)
 	err = server.Serve(listener)

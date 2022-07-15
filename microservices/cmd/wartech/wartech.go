@@ -14,6 +14,7 @@ import (
 	"wartech-studio.com/monster-reacher/libraries/config"
 	"wartech-studio.com/monster-reacher/libraries/healthcheck"
 	"wartech-studio.com/monster-reacher/libraries/protobuf/wartech"
+	"wartech-studio.com/monster-reacher/microservices/cmd/wartech/manager"
 
 	"github.com/go-oauth2/oauth2/v4/errors"
 	"github.com/go-oauth2/oauth2/v4/manage"
@@ -40,9 +41,7 @@ func main() {
 
 	defer listener.Close()
 
-	service := wartech.NewWartechServer()
-
-	wartech.RegisterWartechServer(server, service)
+	wartech.RegisterWartechServer(server, manager.NewServerService())
 	//reflection.Register(server)
 	log.Println("gRPC server listening on " + listenHost)
 	err = server.Serve(listener)

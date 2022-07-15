@@ -9,6 +9,22 @@ import (
 	"wartech-studio.com/monster-reacher/libraries/protobuf/profile"
 )
 
+func NewServerService() profile.ProfileServer {
+	service := profile.NewProfileServer()
+
+	service.GetDataHandler = GetData
+	service.AuthenticationHandler = Authentication
+	service.RegisterHandler = Register
+	service.UserIsValidHandler = UserIsValid
+	service.NameIsValidHandler = NameIsValid
+	service.ServiceIsValidHandler = ServiceIsValid
+	service.ChangeNameHandler = ChangeName
+	service.AddServiceAuthHandler = AddServiceAuth
+	service.RemoveServiceAuthHandler = RemoveServiceAuth
+	service.MergeDataHandler = MergeData
+	return service
+}
+
 func GetData(ctx context.Context, req *profile.GetDataRequest) (*profile.GetDataResponse, error) {
 	driver := getDriver()
 	defer driver.Close()

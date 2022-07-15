@@ -26,7 +26,6 @@ type ServicesDiscoveryClient interface {
 	HealthCheck(ctx context.Context, opts ...grpc.CallOption) (ServicesDiscovery_HealthCheckClient, error)
 	CheckServiceIsOnline(ctx context.Context, in *CheckServiceIsOnlineRequest, opts ...grpc.CallOption) (*CheckServiceIsOnlineResponse, error)
 	GetServices(ctx context.Context, in *GetServicesRequest, opts ...grpc.CallOption) (*GetServicesresponse, error)
-	GatewaySocket(ctx context.Context, opts ...grpc.CallOption) (ServicesDiscovery_GatewaySocketClient, error)
 }
 
 type servicesDiscoveryClient struct {
@@ -95,37 +94,6 @@ func (c *servicesDiscoveryClient) GetServices(ctx context.Context, in *GetServic
 	return out, nil
 }
 
-func (c *servicesDiscoveryClient) GatewaySocket(ctx context.Context, opts ...grpc.CallOption) (ServicesDiscovery_GatewaySocketClient, error) {
-	stream, err := c.cc.NewStream(ctx, &ServicesDiscovery_ServiceDesc.Streams[1], "/services_discovery.ServicesDiscovery/GatewaySocket", opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &servicesDiscoveryGatewaySocketClient{stream}
-	return x, nil
-}
-
-type ServicesDiscovery_GatewaySocketClient interface {
-	Send(*GatewaySocketRequest) error
-	Recv() (*GatewaySocketResponse, error)
-	grpc.ClientStream
-}
-
-type servicesDiscoveryGatewaySocketClient struct {
-	grpc.ClientStream
-}
-
-func (x *servicesDiscoveryGatewaySocketClient) Send(m *GatewaySocketRequest) error {
-	return x.ClientStream.SendMsg(m)
-}
-
-func (x *servicesDiscoveryGatewaySocketClient) Recv() (*GatewaySocketResponse, error) {
-	m := new(GatewaySocketResponse)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 // ServicesDiscoveryServer is the server API for ServicesDiscovery service.
 // All implementations must embed UnimplementedServicesDiscoveryServer
 // for forward compatibility
@@ -134,7 +102,6 @@ type ServicesDiscoveryServer interface {
 	HealthCheck(ServicesDiscovery_HealthCheckServer) error
 	CheckServiceIsOnline(context.Context, *CheckServiceIsOnlineRequest) (*CheckServiceIsOnlineResponse, error)
 	GetServices(context.Context, *GetServicesRequest) (*GetServicesresponse, error)
-	GatewaySocket(ServicesDiscovery_GatewaySocketServer) error
 	mustEmbedUnimplementedServicesDiscoveryServer()
 }
 
@@ -153,9 +120,6 @@ func (UnimplementedServicesDiscoveryServer) CheckServiceIsOnline(context.Context
 }
 func (UnimplementedServicesDiscoveryServer) GetServices(context.Context, *GetServicesRequest) (*GetServicesresponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetServices not implemented")
-}
-func (UnimplementedServicesDiscoveryServer) GatewaySocket(ServicesDiscovery_GatewaySocketServer) error {
-	return status.Errorf(codes.Unimplemented, "method GatewaySocket not implemented")
 }
 func (UnimplementedServicesDiscoveryServer) mustEmbedUnimplementedServicesDiscoveryServer() {}
 
@@ -250,32 +214,6 @@ func _ServicesDiscovery_GetServices_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ServicesDiscovery_GatewaySocket_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(ServicesDiscoveryServer).GatewaySocket(&servicesDiscoveryGatewaySocketServer{stream})
-}
-
-type ServicesDiscovery_GatewaySocketServer interface {
-	Send(*GatewaySocketResponse) error
-	Recv() (*GatewaySocketRequest, error)
-	grpc.ServerStream
-}
-
-type servicesDiscoveryGatewaySocketServer struct {
-	grpc.ServerStream
-}
-
-func (x *servicesDiscoveryGatewaySocketServer) Send(m *GatewaySocketResponse) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-func (x *servicesDiscoveryGatewaySocketServer) Recv() (*GatewaySocketRequest, error) {
-	m := new(GatewaySocketRequest)
-	if err := x.ServerStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 // ServicesDiscovery_ServiceDesc is the grpc.ServiceDesc for ServicesDiscovery service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -300,12 +238,6 @@ var ServicesDiscovery_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "HealthCheck",
 			Handler:       _ServicesDiscovery_HealthCheck_Handler,
-			ServerStreams: true,
-			ClientStreams: true,
-		},
-		{
-			StreamName:    "GatewaySocket",
-			Handler:       _ServicesDiscovery_GatewaySocket_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},

@@ -30,20 +30,7 @@ func main() {
 
 	defer listener.Close()
 
-	service := profile.NewProfileServer()
-
-	service.GetDataHandler = manager.GetData
-	service.AuthenticationHandler = manager.Authentication
-	service.RegisterHandler = manager.Register
-	service.UserIsValidHandler = manager.UserIsValid
-	service.NameIsValidHandler = manager.NameIsValid
-	service.ServiceIsValidHandler = manager.ServiceIsValid
-	service.ChangeNameHandler = manager.ChangeName
-	service.AddServiceAuthHandler = manager.AddServiceAuth
-	service.RemoveServiceAuthHandler = manager.RemoveServiceAuth
-	service.MergeDataHandler = manager.MergeData
-
-	profile.RegisterProfileServer(server, service)
+	profile.RegisterProfileServer(server, manager.NewServerService())
 	//reflection.Register(server)
 	log.Println("gRPC server listening on " + listenHost)
 	err = server.Serve(listener)
