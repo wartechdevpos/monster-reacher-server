@@ -14,8 +14,8 @@ type profileServer struct {
 	GetDataHandler           func(ctx context.Context, req *GetDataRequest) (*GetDataResponse, error)
 	AuthenticationHandler    func(ctx context.Context, req *AuthenticationRequest) (*AuthenticationResponse, error)
 	RegisterHandler          func(ctx context.Context, req *RegisterRequest) (*RegisterResponse, error)
-	AddServiceAuthHandler    func(ctx context.Context, req *AddServiceAuthRequest) (*emptypb.Empty, error)
-	RemoveServiceAuthHandler func(ctx context.Context, req *RemoveServiceAuthRequest) (*emptypb.Empty, error)
+	AddServiceAuthHandler    func(ctx context.Context, req *AddServiceAuthRequest) error
+	RemoveServiceAuthHandler func(ctx context.Context, req *RemoveServiceAuthRequest) error
 }
 
 func NewProfileServer() *profileServer {
@@ -47,14 +47,14 @@ func (server *profileServer) AddServiceAuth(ctx context.Context, req *AddService
 	if server.AddServiceAuthHandler == nil {
 		return nil, errors.New("AddServiceAuth handler not implement")
 	}
-	return server.AddServiceAuthHandler(ctx, req)
+	return &emptypb.Empty{}, server.AddServiceAuthHandler(ctx, req)
 }
 
 func (server *profileServer) RemoveServiceAuth(ctx context.Context, req *RemoveServiceAuthRequest) (*emptypb.Empty, error) {
 	if server.RemoveServiceAuthHandler == nil {
 		return nil, errors.New("RemoveServiceAuth handler not implement")
 	}
-	return server.RemoveServiceAuthHandler(ctx, req)
+	return &emptypb.Empty{}, server.RemoveServiceAuthHandler(ctx, req)
 }
 
 func (*profileServer) mustEmbedUnimplementedProfileServer() {}
