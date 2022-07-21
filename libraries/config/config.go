@@ -5,7 +5,7 @@ const (
 	local_PATH_PROJECT  = "D:/WTProject/devpos/monster-reacher-server"
 )
 
-const ENV = "docker"
+const ENV = "local"
 
 func GetConfigFilePath(cfgName string, forceDefault bool) string {
 	if ENV == "docker" {

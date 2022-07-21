@@ -66,7 +66,7 @@ func SignIn(ctx context.Context, req *authentication.SignInRequest) (*authentica
 	timeout := authData.CreateTimestamp.GetSeconds() + int64(ACCESS_TOKEN_LIFETIME.Seconds()*float64(authData.ExtendCount))
 
 	if time.Now().UTC().Unix()-timeout <= 0 {
-		return &authentication.SignInResponse{IsValid: true}, nil
+		return &authentication.SignInResponse{IsValid: true, Id: authData.GetId()}, nil
 	}
 
 	if time.Now().UTC().Unix()-timeout > int64(ACCESS_TOKEN_LIFETIME.Seconds()) {
@@ -82,7 +82,7 @@ func SignIn(ctx context.Context, req *authentication.SignInRequest) (*authentica
 	authData.ExtendCount = authData.ExtendCount + 1
 
 	if err := dbDriver.UpdateOne(ctx, database.MongoDBSelectOneQueryFilterOne("access_token", req.AccessToken), authData); err != nil {
-		return &authentication.SignInResponse{IsValid: true}, err
+		return &authentication.SignInResponse{IsValid: true, Id: authData.GetId()}, err
 	}
 
 	return &authentication.SignInResponse{IsValid: true, Id: authData.GetId()}, nil

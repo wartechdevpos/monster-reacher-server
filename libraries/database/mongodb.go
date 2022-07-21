@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -31,56 +30,29 @@ func NewMongoDBDriver(uri string, db string, collection string) (DBDriver, error
 
 func (db *mongodb) SelectOne(ctx context.Context, filter interface{}) interface{} {
 	result := db.collection.FindOne(ctx, filter)
-	if result.Err() != nil {
-		log.Println(filter)
-		log.Println(result.Err())
-	}
 	return result
 }
 func (db *mongodb) PushOne(ctx context.Context, data interface{}) (interface{}, error) {
 	result, err := db.collection.InsertOne(ctx, data)
-	if err != nil {
-		log.Println(data)
-		log.Println(err)
-	}
 	return result, err
 }
 func (db *mongodb) DeleteOne(ctx context.Context, filter interface{}) error {
 	_, err := db.collection.DeleteOne(ctx, filter)
-	if err != nil {
-		log.Println(filter)
-		log.Println(err)
-	}
 	return err
 }
 func (db *mongodb) UpdateOne(ctx context.Context, filter interface{}, data interface{}) error {
 	update := bson.D{primitive.E{Key: "$set", Value: data}}
 	_, err := db.collection.UpdateOne(ctx, filter, update)
-	if err != nil {
-		log.Println(filter)
-		log.Println(update)
-		log.Println(err)
-	}
 	return err
 }
 func (db *mongodb) UpdateSpecific(ctx context.Context, filter interface{}, key string, value interface{}) error {
 	update := bson.D{primitive.E{Key: "$set", Value: primitive.E{Key: key, Value: value}}}
 	_, err := db.collection.UpdateOne(ctx, filter, update)
-	if err != nil {
-		log.Println(filter)
-		log.Println(update)
-		log.Println(err)
-	}
 	return err
 }
 func (db *mongodb) IncrementValue(ctx context.Context, filter interface{}, key string, value interface{}) error {
 	update := bson.D{primitive.E{Key: "$inc", Value: primitive.E{Key: key, Value: value}}}
 	_, err := db.collection.UpdateOne(ctx, filter, update)
-	if err != nil {
-		log.Println(filter)
-		log.Println(update)
-		log.Panicln(err)
-	}
 	return err
 }
 func (db *mongodb) Close() error {
