@@ -45,4 +45,4 @@ func (server *characterServer) IncrementEXP(ctx context.Context, req *IncrementE
 	}
 	return nil, server.IncrementEXPHandler(ctx, req)
 }
-func (server *characterServer) mustEmbedUnimplementedCharacterServer()
+func (server *characterServer) mustEmbedUnimplementedCharacterServer() {}
