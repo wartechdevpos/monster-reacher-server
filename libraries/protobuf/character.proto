@@ -1,0 +1,36 @@
+syntax="proto3";
+
+import "google/protobuf/empty.proto";
+import "data_schema.proto";
+
+package character;
+option go_package="wartech-studio.com/monster-reacher/libraries/protobuf/character;character";
+
+service Character {
+    rpc GetData(GetDataRequest) returns(GetDataResponse);
+    rpc SetName(SetNameRequest) returns(google.protobuf.Empty);
+    rpc SetMMR(SetMMRRequest) returns(google.protobuf.Empty);
+    rpc IncrementEXP(IncrementEXPRequest) returns(google.protobuf.Empty);
+}
+
+message GetDataRequest {
+    string id = 1;
+}
+message GetDataResponse {
+    data_schema.CharacterData data = 1;
+}
+
+message SetNameRequest {
+    string id = 1;
+    string name = 2;
+}
+
+message SetMMRRequest {
+    string id = 1;
+    int64 mmr = 2;
+}
+
+message IncrementEXPRequest {
+    string id = 1;
+    int64 exp = 2;
+}

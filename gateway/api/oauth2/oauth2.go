@@ -27,16 +27,16 @@ type oAuth2 struct {
 	providerName string
 }
 
-func (authPtr *oAuth2) SubmitAuth(tokenCode string) error {
+func (authPtr *oAuth2) SubmitAuth(ctx context.Context, tokenCode string) error {
 	if authPtr.oConfig == nil {
 		return errors.New("please call init and set oConfig and userUrl")
 	}
-	tok, err := authPtr.oConfig.Exchange(context.TODO(), tokenCode, authPtr.opts...)
+	tok, err := authPtr.oConfig.Exchange(ctx, tokenCode, authPtr.opts...)
 
 	if err != nil {
 		return err
 	}
-	client := authPtr.oConfig.Client(context.TODO(), tok)
+	client := authPtr.oConfig.Client(ctx, tok)
 
 	res, err := client.Get(authPtr.userUrl)
 	if err != nil {

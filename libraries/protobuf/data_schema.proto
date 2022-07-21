@@ -16,15 +16,20 @@ message WartechUserData {
     google.protobuf.Timestamp birthday = 6 [(tagger.tags) = "bson:\"birthday\"" ];
 }
 
-message ProfileData {
-    string id = 1 [(tagger.tags) = "bson:\"_id,omitempty\"" ];
-    string name = 2 [(tagger.tags) = "bson:\"name\"" ];
-    map<string,string> services = 3 [(tagger.tags) = "bson:\"services\"" ];
-}
-
 message AuthenticationData {
     string id = 1 [(tagger.tags) = "bson:\"id\"" ];
 	google.protobuf.Timestamp create_timestamp = 2 [(tagger.tags) = "bson:\"create_timestamp\"" ];
 	string access_token = 3 [(tagger.tags) = "bson:\"access_token\"" ];
 	int64 extend_count = 4 [(tagger.tags) = "bson:\"extend_count\"" ];
+}
+
+message ProfileData {
+    string id = 1 [(tagger.tags) = "bson:\"_id,omitempty\"" ];
+    map<string,string> services = 3 [(tagger.tags) = "bson:\"services\"" ];
+}
+
+message CharacterData {
+    string name = 1 [(tagger.tags) = "bson:\"name\"" ];
+    int64 exp = 2 [(tagger.tags) = "bson:\"exp\"" ];
+    int64 mmr = 3 [(tagger.tags) = "bson:\"mmr\"" ];
 }

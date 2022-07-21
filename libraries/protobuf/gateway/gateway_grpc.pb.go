@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -22,9 +23,15 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GatewayClient interface {
-	Authentication(ctx context.Context, in *AuthenticationRequest, opts ...grpc.CallOption) (*AuthenticationReasponse, error)
-	WartechRegister(ctx context.Context, in *WartechRegisterRequest, opts ...grpc.CallOption) (*WartechRegisterReasponse, error)
-	GetProfileData(ctx context.Context, in *GetProfileDataRequest, opts ...grpc.CallOption) (*GetProfileDataReasponse, error)
+	Authentication(ctx context.Context, in *AuthenticationRequest, opts ...grpc.CallOption) (*AuthenticationResponse, error)
+	WartechRegister(ctx context.Context, in *WartechRegisterRequest, opts ...grpc.CallOption) (*WartechRegisterResponse, error)
+	GetProfileData(ctx context.Context, in *GetProfileDataRequest, opts ...grpc.CallOption) (*GetProfileDataResponse, error)
+	GetCharacterData(ctx context.Context, in *GetCharacterDataRequest, opts ...grpc.CallOption) (*GetCharacterDataResponse, error)
+	SetCharacterName(ctx context.Context, in *SetCharacterNameRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SetCharacterMMR(ctx context.Context, in *SetCharacterMMRRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	LinkServiceToAccount(ctx context.Context, in *LinkServiceToAccountRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	IncrementCharacterEXP(ctx context.Context, in *IncrementCharacterEXPRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AddToStorage(ctx context.Context, in *AddToStorageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type gatewayClient struct {
@@ -35,8 +42,8 @@ func NewGatewayClient(cc grpc.ClientConnInterface) GatewayClient {
 	return &gatewayClient{cc}
 }
 
-func (c *gatewayClient) Authentication(ctx context.Context, in *AuthenticationRequest, opts ...grpc.CallOption) (*AuthenticationReasponse, error) {
-	out := new(AuthenticationReasponse)
+func (c *gatewayClient) Authentication(ctx context.Context, in *AuthenticationRequest, opts ...grpc.CallOption) (*AuthenticationResponse, error) {
+	out := new(AuthenticationResponse)
 	err := c.cc.Invoke(ctx, "/gateway.Gateway/Authentication", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -44,8 +51,8 @@ func (c *gatewayClient) Authentication(ctx context.Context, in *AuthenticationRe
 	return out, nil
 }
 
-func (c *gatewayClient) WartechRegister(ctx context.Context, in *WartechRegisterRequest, opts ...grpc.CallOption) (*WartechRegisterReasponse, error) {
-	out := new(WartechRegisterReasponse)
+func (c *gatewayClient) WartechRegister(ctx context.Context, in *WartechRegisterRequest, opts ...grpc.CallOption) (*WartechRegisterResponse, error) {
+	out := new(WartechRegisterResponse)
 	err := c.cc.Invoke(ctx, "/gateway.Gateway/WartechRegister", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -53,9 +60,63 @@ func (c *gatewayClient) WartechRegister(ctx context.Context, in *WartechRegister
 	return out, nil
 }
 
-func (c *gatewayClient) GetProfileData(ctx context.Context, in *GetProfileDataRequest, opts ...grpc.CallOption) (*GetProfileDataReasponse, error) {
-	out := new(GetProfileDataReasponse)
+func (c *gatewayClient) GetProfileData(ctx context.Context, in *GetProfileDataRequest, opts ...grpc.CallOption) (*GetProfileDataResponse, error) {
+	out := new(GetProfileDataResponse)
 	err := c.cc.Invoke(ctx, "/gateway.Gateway/GetProfileData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gatewayClient) GetCharacterData(ctx context.Context, in *GetCharacterDataRequest, opts ...grpc.CallOption) (*GetCharacterDataResponse, error) {
+	out := new(GetCharacterDataResponse)
+	err := c.cc.Invoke(ctx, "/gateway.Gateway/GetCharacterData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gatewayClient) SetCharacterName(ctx context.Context, in *SetCharacterNameRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/gateway.Gateway/SetCharacterName", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gatewayClient) SetCharacterMMR(ctx context.Context, in *SetCharacterMMRRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/gateway.Gateway/SetCharacterMMR", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gatewayClient) LinkServiceToAccount(ctx context.Context, in *LinkServiceToAccountRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/gateway.Gateway/LinkServiceToAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gatewayClient) IncrementCharacterEXP(ctx context.Context, in *IncrementCharacterEXPRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/gateway.Gateway/IncrementCharacterEXP", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gatewayClient) AddToStorage(ctx context.Context, in *AddToStorageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/gateway.Gateway/AddToStorage", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -66,9 +127,15 @@ func (c *gatewayClient) GetProfileData(ctx context.Context, in *GetProfileDataRe
 // All implementations must embed UnimplementedGatewayServer
 // for forward compatibility
 type GatewayServer interface {
-	Authentication(context.Context, *AuthenticationRequest) (*AuthenticationReasponse, error)
-	WartechRegister(context.Context, *WartechRegisterRequest) (*WartechRegisterReasponse, error)
-	GetProfileData(context.Context, *GetProfileDataRequest) (*GetProfileDataReasponse, error)
+	Authentication(context.Context, *AuthenticationRequest) (*AuthenticationResponse, error)
+	WartechRegister(context.Context, *WartechRegisterRequest) (*WartechRegisterResponse, error)
+	GetProfileData(context.Context, *GetProfileDataRequest) (*GetProfileDataResponse, error)
+	GetCharacterData(context.Context, *GetCharacterDataRequest) (*GetCharacterDataResponse, error)
+	SetCharacterName(context.Context, *SetCharacterNameRequest) (*emptypb.Empty, error)
+	SetCharacterMMR(context.Context, *SetCharacterMMRRequest) (*emptypb.Empty, error)
+	LinkServiceToAccount(context.Context, *LinkServiceToAccountRequest) (*emptypb.Empty, error)
+	IncrementCharacterEXP(context.Context, *IncrementCharacterEXPRequest) (*emptypb.Empty, error)
+	AddToStorage(context.Context, *AddToStorageRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedGatewayServer()
 }
 
@@ -76,14 +143,32 @@ type GatewayServer interface {
 type UnimplementedGatewayServer struct {
 }
 
-func (UnimplementedGatewayServer) Authentication(context.Context, *AuthenticationRequest) (*AuthenticationReasponse, error) {
+func (UnimplementedGatewayServer) Authentication(context.Context, *AuthenticationRequest) (*AuthenticationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Authentication not implemented")
 }
-func (UnimplementedGatewayServer) WartechRegister(context.Context, *WartechRegisterRequest) (*WartechRegisterReasponse, error) {
+func (UnimplementedGatewayServer) WartechRegister(context.Context, *WartechRegisterRequest) (*WartechRegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WartechRegister not implemented")
 }
-func (UnimplementedGatewayServer) GetProfileData(context.Context, *GetProfileDataRequest) (*GetProfileDataReasponse, error) {
+func (UnimplementedGatewayServer) GetProfileData(context.Context, *GetProfileDataRequest) (*GetProfileDataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProfileData not implemented")
+}
+func (UnimplementedGatewayServer) GetCharacterData(context.Context, *GetCharacterDataRequest) (*GetCharacterDataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCharacterData not implemented")
+}
+func (UnimplementedGatewayServer) SetCharacterName(context.Context, *SetCharacterNameRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetCharacterName not implemented")
+}
+func (UnimplementedGatewayServer) SetCharacterMMR(context.Context, *SetCharacterMMRRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetCharacterMMR not implemented")
+}
+func (UnimplementedGatewayServer) LinkServiceToAccount(context.Context, *LinkServiceToAccountRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LinkServiceToAccount not implemented")
+}
+func (UnimplementedGatewayServer) IncrementCharacterEXP(context.Context, *IncrementCharacterEXPRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IncrementCharacterEXP not implemented")
+}
+func (UnimplementedGatewayServer) AddToStorage(context.Context, *AddToStorageRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddToStorage not implemented")
 }
 func (UnimplementedGatewayServer) mustEmbedUnimplementedGatewayServer() {}
 
@@ -152,6 +237,114 @@ func _Gateway_GetProfileData_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Gateway_GetCharacterData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCharacterDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayServer).GetCharacterData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gateway.Gateway/GetCharacterData",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServer).GetCharacterData(ctx, req.(*GetCharacterDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Gateway_SetCharacterName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetCharacterNameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayServer).SetCharacterName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gateway.Gateway/SetCharacterName",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServer).SetCharacterName(ctx, req.(*SetCharacterNameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Gateway_SetCharacterMMR_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetCharacterMMRRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayServer).SetCharacterMMR(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gateway.Gateway/SetCharacterMMR",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServer).SetCharacterMMR(ctx, req.(*SetCharacterMMRRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Gateway_LinkServiceToAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LinkServiceToAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayServer).LinkServiceToAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gateway.Gateway/LinkServiceToAccount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServer).LinkServiceToAccount(ctx, req.(*LinkServiceToAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Gateway_IncrementCharacterEXP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IncrementCharacterEXPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayServer).IncrementCharacterEXP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gateway.Gateway/IncrementCharacterEXP",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServer).IncrementCharacterEXP(ctx, req.(*IncrementCharacterEXPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Gateway_AddToStorage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddToStorageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayServer).AddToStorage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gateway.Gateway/AddToStorage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServer).AddToStorage(ctx, req.(*AddToStorageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Gateway_ServiceDesc is the grpc.ServiceDesc for Gateway service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +363,30 @@ var Gateway_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetProfileData",
 			Handler:    _Gateway_GetProfileData_Handler,
+		},
+		{
+			MethodName: "GetCharacterData",
+			Handler:    _Gateway_GetCharacterData_Handler,
+		},
+		{
+			MethodName: "SetCharacterName",
+			Handler:    _Gateway_SetCharacterName_Handler,
+		},
+		{
+			MethodName: "SetCharacterMMR",
+			Handler:    _Gateway_SetCharacterMMR_Handler,
+		},
+		{
+			MethodName: "LinkServiceToAccount",
+			Handler:    _Gateway_LinkServiceToAccount_Handler,
+		},
+		{
+			MethodName: "IncrementCharacterEXP",
+			Handler:    _Gateway_IncrementCharacterEXP_Handler,
+		},
+		{
+			MethodName: "AddToStorage",
+			Handler:    _Gateway_AddToStorage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

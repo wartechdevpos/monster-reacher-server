@@ -10,38 +10,40 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"wartech-studio.com/monster-reacher/gateway/api"
 	"wartech-studio.com/monster-reacher/libraries/config"
+	"wartech-studio.com/monster-reacher/libraries/protobuf/gateway"
 	"wartech-studio.com/monster-reacher/libraries/protobuf/wartech"
 )
 
-func WartechRegister(username, email, password, birthday string) (bool, error) {
+func WartechRegister(ctx context.Context, req *gateway.WartechRegisterRequest) (res *gateway.WartechRegisterResponse, err error) {
+	res = &gateway.WartechRegisterResponse{}
 	serivces, ok := api.ServicesDiscoveryCache.CheckRequireServices([]string{
 		config.GetNameConfig().MicroServiceName.Wartech,
 	})
 	if !ok {
-		return false, errors.New("service profile,authentication is offline")
+		err = errors.New("service profile,authentication is offline")
+		return
 	}
 
-	if err := checkWartechRegisterParam(username, email, password, birthday); err != nil {
-		return false, err
+	if err = checkWartechRegisterParam(req.GetUsername(), req.GetEmail(), req.GetPassword(), req.GetBirthday()); err != nil {
+		return
 	}
 
 	cc, err := grpc.Dial(serivces[config.GetNameConfig().MicroServiceName.Wartech].GetHost(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		return false, err
+		return
 	}
 	defer cc.Close()
 
 	c := wartech.NewWartechClient(cc)
-	ctx, cancle := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancle()
-	birthdayTime, _ := time.Parse("01-02-06", birthday)
-	res, err := c.Register(ctx, &wartech.RegisterRequest{
-		User:              username,
-		Email:             email,
-		Password:          password,
+	birthdayTime, _ := time.Parse("01-02-06", req.GetBirthday())
+	resp, err := c.Register(ctx, &wartech.RegisterRequest{
+		User:              req.GetUsername(),
+		Email:             req.GetEmail(),
+		Password:          req.GetPassword(),
 		BirthdayTimestamp: timestamppb.New(birthdayTime),
 	})
-	return res.GetIsSuccess(), err
+	res.IsSuccess = resp.GetIsSuccess()
+	return
 }
 
 func checkWartechRegisterParam(username, email, password, birthday string) error {

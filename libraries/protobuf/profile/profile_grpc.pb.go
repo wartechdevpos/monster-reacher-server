@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -25,13 +26,8 @@ type ProfileClient interface {
 	GetData(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*GetDataResponse, error)
 	Authentication(ctx context.Context, in *AuthenticationRequest, opts ...grpc.CallOption) (*AuthenticationResponse, error)
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
-	UserIsValid(ctx context.Context, in *UserIsValidRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error)
-	NameIsValid(ctx context.Context, in *NameIsValidRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error)
-	ServiceIsValid(ctx context.Context, in *ServiceIsValidRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error)
-	ChangeName(ctx context.Context, in *ChangeNameRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
-	AddServiceAuth(ctx context.Context, in *AddServiceAuthRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
-	RemoveServiceAuth(ctx context.Context, in *RemoveServiceAuthRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
-	MergeData(ctx context.Context, in *MergeDataRequest, opts ...grpc.CallOption) (*MergeDataResponse, error)
+	AddServiceAuth(ctx context.Context, in *AddServiceAuthRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RemoveServiceAuth(ctx context.Context, in *RemoveServiceAuthRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type profileClient struct {
@@ -69,44 +65,8 @@ func (c *profileClient) Register(ctx context.Context, in *RegisterRequest, opts 
 	return out, nil
 }
 
-func (c *profileClient) UserIsValid(ctx context.Context, in *UserIsValidRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error) {
-	out := new(CheckProfileResponse)
-	err := c.cc.Invoke(ctx, "/profile.Profile/UserIsValid", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *profileClient) NameIsValid(ctx context.Context, in *NameIsValidRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error) {
-	out := new(CheckProfileResponse)
-	err := c.cc.Invoke(ctx, "/profile.Profile/NameIsValid", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *profileClient) ServiceIsValid(ctx context.Context, in *ServiceIsValidRequest, opts ...grpc.CallOption) (*CheckProfileResponse, error) {
-	out := new(CheckProfileResponse)
-	err := c.cc.Invoke(ctx, "/profile.Profile/ServiceIsValid", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *profileClient) ChangeName(ctx context.Context, in *ChangeNameRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
-	out := new(SuccessResponse)
-	err := c.cc.Invoke(ctx, "/profile.Profile/ChangeName", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *profileClient) AddServiceAuth(ctx context.Context, in *AddServiceAuthRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
-	out := new(SuccessResponse)
+func (c *profileClient) AddServiceAuth(ctx context.Context, in *AddServiceAuthRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/profile.Profile/AddServiceAuth", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -114,18 +74,9 @@ func (c *profileClient) AddServiceAuth(ctx context.Context, in *AddServiceAuthRe
 	return out, nil
 }
 
-func (c *profileClient) RemoveServiceAuth(ctx context.Context, in *RemoveServiceAuthRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
-	out := new(SuccessResponse)
+func (c *profileClient) RemoveServiceAuth(ctx context.Context, in *RemoveServiceAuthRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/profile.Profile/RemoveServiceAuth", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *profileClient) MergeData(ctx context.Context, in *MergeDataRequest, opts ...grpc.CallOption) (*MergeDataResponse, error) {
-	out := new(MergeDataResponse)
-	err := c.cc.Invoke(ctx, "/profile.Profile/MergeData", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -139,13 +90,8 @@ type ProfileServer interface {
 	GetData(context.Context, *GetDataRequest) (*GetDataResponse, error)
 	Authentication(context.Context, *AuthenticationRequest) (*AuthenticationResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
-	UserIsValid(context.Context, *UserIsValidRequest) (*CheckProfileResponse, error)
-	NameIsValid(context.Context, *NameIsValidRequest) (*CheckProfileResponse, error)
-	ServiceIsValid(context.Context, *ServiceIsValidRequest) (*CheckProfileResponse, error)
-	ChangeName(context.Context, *ChangeNameRequest) (*SuccessResponse, error)
-	AddServiceAuth(context.Context, *AddServiceAuthRequest) (*SuccessResponse, error)
-	RemoveServiceAuth(context.Context, *RemoveServiceAuthRequest) (*SuccessResponse, error)
-	MergeData(context.Context, *MergeDataRequest) (*MergeDataResponse, error)
+	AddServiceAuth(context.Context, *AddServiceAuthRequest) (*emptypb.Empty, error)
+	RemoveServiceAuth(context.Context, *RemoveServiceAuthRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedProfileServer()
 }
 
@@ -162,26 +108,11 @@ func (UnimplementedProfileServer) Authentication(context.Context, *Authenticatio
 func (UnimplementedProfileServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedProfileServer) UserIsValid(context.Context, *UserIsValidRequest) (*CheckProfileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UserIsValid not implemented")
-}
-func (UnimplementedProfileServer) NameIsValid(context.Context, *NameIsValidRequest) (*CheckProfileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method NameIsValid not implemented")
-}
-func (UnimplementedProfileServer) ServiceIsValid(context.Context, *ServiceIsValidRequest) (*CheckProfileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ServiceIsValid not implemented")
-}
-func (UnimplementedProfileServer) ChangeName(context.Context, *ChangeNameRequest) (*SuccessResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ChangeName not implemented")
-}
-func (UnimplementedProfileServer) AddServiceAuth(context.Context, *AddServiceAuthRequest) (*SuccessResponse, error) {
+func (UnimplementedProfileServer) AddServiceAuth(context.Context, *AddServiceAuthRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddServiceAuth not implemented")
 }
-func (UnimplementedProfileServer) RemoveServiceAuth(context.Context, *RemoveServiceAuthRequest) (*SuccessResponse, error) {
+func (UnimplementedProfileServer) RemoveServiceAuth(context.Context, *RemoveServiceAuthRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveServiceAuth not implemented")
-}
-func (UnimplementedProfileServer) MergeData(context.Context, *MergeDataRequest) (*MergeDataResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method MergeData not implemented")
 }
 func (UnimplementedProfileServer) mustEmbedUnimplementedProfileServer() {}
 
@@ -250,78 +181,6 @@ func _Profile_Register_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Profile_UserIsValid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserIsValidRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProfileServer).UserIsValid(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/profile.Profile/UserIsValid",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfileServer).UserIsValid(ctx, req.(*UserIsValidRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Profile_NameIsValid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NameIsValidRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProfileServer).NameIsValid(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/profile.Profile/NameIsValid",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfileServer).NameIsValid(ctx, req.(*NameIsValidRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Profile_ServiceIsValid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ServiceIsValidRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProfileServer).ServiceIsValid(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/profile.Profile/ServiceIsValid",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfileServer).ServiceIsValid(ctx, req.(*ServiceIsValidRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Profile_ChangeName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ChangeNameRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProfileServer).ChangeName(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/profile.Profile/ChangeName",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfileServer).ChangeName(ctx, req.(*ChangeNameRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Profile_AddServiceAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddServiceAuthRequest)
 	if err := dec(in); err != nil {
@@ -358,24 +217,6 @@ func _Profile_RemoveServiceAuth_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Profile_MergeData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MergeDataRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProfileServer).MergeData(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/profile.Profile/MergeData",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfileServer).MergeData(ctx, req.(*MergeDataRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Profile_ServiceDesc is the grpc.ServiceDesc for Profile service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -396,32 +237,12 @@ var Profile_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Profile_Register_Handler,
 		},
 		{
-			MethodName: "UserIsValid",
-			Handler:    _Profile_UserIsValid_Handler,
-		},
-		{
-			MethodName: "NameIsValid",
-			Handler:    _Profile_NameIsValid_Handler,
-		},
-		{
-			MethodName: "ServiceIsValid",
-			Handler:    _Profile_ServiceIsValid_Handler,
-		},
-		{
-			MethodName: "ChangeName",
-			Handler:    _Profile_ChangeName_Handler,
-		},
-		{
 			MethodName: "AddServiceAuth",
 			Handler:    _Profile_AddServiceAuth_Handler,
 		},
 		{
 			MethodName: "RemoveServiceAuth",
 			Handler:    _Profile_RemoveServiceAuth_Handler,
-		},
-		{
-			MethodName: "MergeData",
-			Handler:    _Profile_MergeData_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
