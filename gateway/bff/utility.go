@@ -3,6 +3,7 @@ package bff
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -19,6 +20,7 @@ func requestService(ctx context.Context, token string, service string) (owner st
 	if owner, err = getAuthTokenOwner(ctx, token); err != nil {
 		return
 	}
+	log.Println(owner)
 	conn, err = grpcConn(service)
 	return
 }
