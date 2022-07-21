@@ -31,6 +31,10 @@ func NewMongoDBDriver(uri string, db string, collection string) (DBDriver, error
 
 func (db *mongodb) SelectOne(ctx context.Context, filter interface{}) interface{} {
 	result := db.collection.FindOne(ctx, filter)
+	if result.Err() != nil {
+		log.Println(filter)
+		log.Println(result.Err())
+	}
 	return result
 }
 func (db *mongodb) PushOne(ctx context.Context, data interface{}) (interface{}, error) {
