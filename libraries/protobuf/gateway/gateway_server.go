@@ -12,11 +12,11 @@ type gatewayServer struct {
 	WartechRegisterHandler       func(ctx context.Context, req *WartechRegisterRequest) (*WartechRegisterResponse, error)
 	GetProfileDataHandler        func(ctx context.Context, req *GetProfileDataRequest) (*GetProfileDataResponse, error)
 	GetCharacterDataHandler      func(ctx context.Context, req *GetCharacterDataRequest) (*GetCharacterDataResponse, error)
-	SetCharacterNameHandler      func(ctx context.Context, req *SetCharacterNameRequest) (*emptypb.Empty, error)
-	SetCharacterMMRHandler       func(ctx context.Context, req *SetCharacterMMRRequest) (*emptypb.Empty, error)
-	LinkServiceToAccountHandler  func(ctx context.Context, req *LinkServiceToAccountRequest) (*emptypb.Empty, error)
-	IncrementCharacterEXPHandler func(ctx context.Context, req *IncrementCharacterEXPRequest) (*emptypb.Empty, error)
-	AddToStorageHandler          func(ctx context.Context, req *AddToStorageRequest) (*emptypb.Empty, error)
+	SetCharacterNameHandler      func(ctx context.Context, req *SetCharacterNameRequest) error
+	SetCharacterMMRHandler       func(ctx context.Context, req *SetCharacterMMRRequest) error
+	LinkServiceToAccountHandler  func(ctx context.Context, req *LinkServiceToAccountRequest) error
+	IncrementCharacterEXPHandler func(ctx context.Context, req *IncrementCharacterEXPRequest) error
+	AddToStorageHandler          func(ctx context.Context, req *AddToStorageRequest) error
 }
 
 //var checkGatewayServer GatewayServer = &gatewayServer{}
@@ -56,31 +56,31 @@ func (server *gatewayServer) SetCharacterName(ctx context.Context, req *SetChara
 	if server.SetCharacterNameHandler == nil {
 		return nil, errors.New("SetCharacterName handler not implement")
 	}
-	return server.SetCharacterNameHandler(ctx, req)
+	return &emptypb.Empty{}, server.SetCharacterNameHandler(ctx, req)
 }
 func (server *gatewayServer) SetCharacterMMR(ctx context.Context, req *SetCharacterMMRRequest) (*emptypb.Empty, error) {
 	if server.SetCharacterMMRHandler == nil {
 		return nil, errors.New("SetCharacterMMR handler not implement")
 	}
-	return server.SetCharacterMMRHandler(ctx, req)
+	return &emptypb.Empty{}, server.SetCharacterMMRHandler(ctx, req)
 }
 func (server *gatewayServer) LinkServiceToAccount(ctx context.Context, req *LinkServiceToAccountRequest) (*emptypb.Empty, error) {
 	if server.LinkServiceToAccountHandler == nil {
 		return nil, errors.New("LinkServiceToAccount handler not implement")
 	}
-	return server.LinkServiceToAccountHandler(ctx, req)
+	return &emptypb.Empty{}, server.LinkServiceToAccountHandler(ctx, req)
 }
 func (server *gatewayServer) IncrementCharacterEXP(ctx context.Context, req *IncrementCharacterEXPRequest) (*emptypb.Empty, error) {
 	if server.IncrementCharacterEXPHandler == nil {
 		return nil, errors.New("IncrementCharacterEXP handler not implement")
 	}
-	return server.IncrementCharacterEXPHandler(ctx, req)
+	return &emptypb.Empty{}, server.IncrementCharacterEXPHandler(ctx, req)
 }
 func (server *gatewayServer) AddToStorage(ctx context.Context, req *AddToStorageRequest) (*emptypb.Empty, error) {
 	if server.AddToStorageHandler == nil {
 		return nil, errors.New("AddToStorage handler not implement")
 	}
-	return server.AddToStorageHandler(ctx, req)
+	return &emptypb.Empty{}, server.AddToStorageHandler(ctx, req)
 }
 
 func (server *gatewayServer) mustEmbedUnimplementedGatewayServer() {}

@@ -3,14 +3,13 @@ package bff
 import (
 	"context"
 
-	"google.golang.org/protobuf/types/known/emptypb"
 	"wartech-studio.com/monster-reacher/libraries/config"
 	"wartech-studio.com/monster-reacher/libraries/protobuf/character"
 	"wartech-studio.com/monster-reacher/libraries/protobuf/gateway"
 	"wartech-studio.com/monster-reacher/libraries/protobuf/profile"
 )
 
-func LinkServiceToAccount(ctx context.Context, req *gateway.LinkServiceToAccountRequest) (empty *emptypb.Empty, err error) {
+func LinkServiceToAccount(ctx context.Context, req *gateway.LinkServiceToAccountRequest) (err error) {
 	userinfo, err := getUserInfoByServiceCode(ctx, req.GetServiceName(), req.GetServiceCode())
 	if err != nil {
 		return
@@ -61,7 +60,7 @@ func GetCharacterData(ctx context.Context, req *gateway.GetCharacterDataRequest)
 	return &gateway.GetCharacterDataResponse{Data: resp.GetData()}, nil
 }
 
-func SetCharacterName(ctx context.Context, req *gateway.SetCharacterNameRequest) (empty *emptypb.Empty, err error) {
+func SetCharacterName(ctx context.Context, req *gateway.SetCharacterNameRequest) (err error) {
 	owner, cc, err := requestService(ctx, req.GetToken(), config.GetNameConfig().MicroServiceName.Character)
 	if err != nil {
 		return
@@ -73,7 +72,7 @@ func SetCharacterName(ctx context.Context, req *gateway.SetCharacterNameRequest)
 	return
 }
 
-func SetCharacterMMR(ctx context.Context, req *gateway.SetCharacterMMRRequest) (empty *emptypb.Empty, err error) {
+func SetCharacterMMR(ctx context.Context, req *gateway.SetCharacterMMRRequest) (err error) {
 	owner, cc, err := requestService(ctx, req.GetToken(), config.GetNameConfig().MicroServiceName.Character)
 	if err != nil {
 		return
@@ -85,7 +84,7 @@ func SetCharacterMMR(ctx context.Context, req *gateway.SetCharacterMMRRequest) (
 	return
 }
 
-func IncrementCharacterEXP(ctx context.Context, req *gateway.IncrementCharacterEXPRequest) (empty *emptypb.Empty, err error) {
+func IncrementCharacterEXP(ctx context.Context, req *gateway.IncrementCharacterEXPRequest) (err error) {
 	owner, cc, err := requestService(ctx, req.GetToken(), config.GetNameConfig().MicroServiceName.Character)
 	if err != nil {
 		return
