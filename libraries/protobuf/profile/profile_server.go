@@ -14,8 +14,8 @@ type profileServer struct {
 	GetDataHandler           func(ctx context.Context, req *GetDataRequest) (*GetDataResponse, error)
 	AuthenticationHandler    func(ctx context.Context, req *AuthenticationRequest) (*AuthenticationResponse, error)
 	RegisterHandler          func(ctx context.Context, req *RegisterRequest) (*RegisterResponse, error)
-	AddServiceAuthHandler    func(ctx context.Context, req *AddServiceAuthRequest) error
-	RemoveServiceAuthHandler func(ctx context.Context, req *RemoveServiceAuthRequest) error
+	AddServiceAuthHandler    func(ctx context.Context, req *AddServiceAuthRequest) (*emptypb.Empty, error)
+	RemoveServiceAuthHandler func(ctx context.Context, req *RemoveServiceAuthRequest) (*emptypb.Empty, error)
 }
 
 func NewProfileServer() *profileServer {

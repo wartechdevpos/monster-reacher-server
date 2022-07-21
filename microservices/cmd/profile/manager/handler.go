@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"google.golang.org/protobuf/types/known/emptypb"
 	"wartech-studio.com/monster-reacher/libraries/database"
 	"wartech-studio.com/monster-reacher/libraries/protobuf/data_schema"
 	"wartech-studio.com/monster-reacher/libraries/protobuf/profile"
@@ -54,28 +55,28 @@ func Register(ctx context.Context, req *profile.RegisterRequest) (*profile.Regis
 	return &profile.RegisterResponse{Id: database.MongoDBDecodeResultToID(result)}, nil
 }
 
-func AddServiceAuth(ctx context.Context, req *profile.AddServiceAuthRequest) error {
+func AddServiceAuth(ctx context.Context, req *profile.AddServiceAuthRequest) (*emptypb.Empty, error) {
 	driver := getDriver()
 	defer driver.Close()
 	filter := database.MongoDBSelectOneQueryFilterOne("_id", req.GetId())
 	data, err := getProfileData(ctx, driver, filter)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	data.Services[req.GetServiceName()] = req.GetServiceId()
 	data.Id = ""
-	return driver.UpdateOne(ctx, filter, data)
+	return nil, driver.UpdateOne(ctx, filter, data)
 }
 
-func RemoveServiceAuth(ctx context.Context, req *profile.RemoveServiceAuthRequest) error {
+func RemoveServiceAuth(ctx context.Context, req *profile.RemoveServiceAuthRequest) (*emptypb.Empty, error) {
 	driver := getDriver()
 	defer driver.Close()
 	filter := database.MongoDBSelectOneQueryFilterOne("_id", req.GetId())
 	data, err := getProfileData(ctx, driver, filter)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	delete(data.Services, req.GetServiceName())
 	data.Id = ""
-	return driver.UpdateOne(ctx, filter, data)
+	return nil, driver.UpdateOne(ctx, filter, data)
 }
