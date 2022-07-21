@@ -19,6 +19,10 @@
         "wartech" : {
             "hosts":["10.1.0.99"],
             "ports":[20561,20560]
+        },
+        "character" : {
+            "hosts":["10.1.0.102"],
+            "ports":[20571]
         }
     },
     "databases": {
