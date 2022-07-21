@@ -47,14 +47,14 @@ func (server *profileServer) AddServiceAuth(ctx context.Context, req *AddService
 	if server.AddServiceAuthHandler == nil {
 		return nil, errors.New("AddServiceAuth handler not implement")
 	}
-	return nil, server.AddServiceAuthHandler(ctx, req)
+	return server.AddServiceAuthHandler(ctx, req)
 }
 
 func (server *profileServer) RemoveServiceAuth(ctx context.Context, req *RemoveServiceAuthRequest) (*emptypb.Empty, error) {
 	if server.RemoveServiceAuthHandler == nil {
 		return nil, errors.New("RemoveServiceAuth handler not implement")
 	}
-	return nil, server.RemoveServiceAuthHandler(ctx, req)
+	return server.RemoveServiceAuthHandler(ctx, req)
 }
 
 func (*profileServer) mustEmbedUnimplementedProfileServer() {}
