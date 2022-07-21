@@ -36,14 +36,16 @@ func (db *mongodb) SelectOne(ctx context.Context, filter interface{}) interface{
 func (db *mongodb) PushOne(ctx context.Context, data interface{}) (interface{}, error) {
 	result, err := db.collection.InsertOne(ctx, data)
 	if err != nil {
-		log.Panicln(err)
+		log.Println(data)
+		log.Println(err)
 	}
 	return result, err
 }
 func (db *mongodb) DeleteOne(ctx context.Context, filter interface{}) error {
 	_, err := db.collection.DeleteOne(ctx, filter)
 	if err != nil {
-		log.Panicln(err)
+		log.Println(filter)
+		log.Println(err)
 	}
 	return err
 }
@@ -51,7 +53,9 @@ func (db *mongodb) UpdateOne(ctx context.Context, filter interface{}, data inter
 	update := bson.D{primitive.E{Key: "$set", Value: data}}
 	_, err := db.collection.UpdateOne(ctx, filter, update)
 	if err != nil {
-		log.Panicln(err)
+		log.Println(filter)
+		log.Println(update)
+		log.Println(err)
 	}
 	return err
 }
@@ -59,7 +63,9 @@ func (db *mongodb) UpdateSpecific(ctx context.Context, filter interface{}, key s
 	update := bson.D{primitive.E{Key: "$set", Value: primitive.E{Key: key, Value: value}}}
 	_, err := db.collection.UpdateOne(ctx, filter, update)
 	if err != nil {
-		log.Panicln(err)
+		log.Println(filter)
+		log.Println(update)
+		log.Println(err)
 	}
 	return err
 }
@@ -67,6 +73,8 @@ func (db *mongodb) IncrementValue(ctx context.Context, filter interface{}, key s
 	update := bson.D{primitive.E{Key: "$inc", Value: primitive.E{Key: key, Value: value}}}
 	_, err := db.collection.UpdateOne(ctx, filter, update)
 	if err != nil {
+		log.Println(filter)
+		log.Println(update)
 		log.Panicln(err)
 	}
 	return err
