@@ -63,7 +63,8 @@ func AddServiceAuth(ctx context.Context, req *profile.AddServiceAuthRequest) err
 		return err
 	}
 	data.Services[req.GetServiceName()] = req.GetServiceId()
-	return driver.UpdateSpecific(ctx, filter, "services", data.Services)
+	data.Id = ""
+	return driver.UpdateOne(ctx, filter, data)
 }
 
 func RemoveServiceAuth(ctx context.Context, req *profile.RemoveServiceAuthRequest) error {
@@ -75,5 +76,6 @@ func RemoveServiceAuth(ctx context.Context, req *profile.RemoveServiceAuthReques
 		return err
 	}
 	delete(data.Services, req.GetServiceName())
-	return driver.UpdateSpecific(ctx, filter, "services", data.Services)
+	data.Id = ""
+	return driver.UpdateOne(ctx, filter, data)
 }

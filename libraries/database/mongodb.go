@@ -41,17 +41,17 @@ func (db *mongodb) DeleteOne(ctx context.Context, filter interface{}) error {
 	return err
 }
 func (db *mongodb) UpdateOne(ctx context.Context, filter interface{}, data interface{}) error {
-	update := bson.D{primitive.E{Key: "$set", Value: data}}
+	update := bson.D{bson.E{Key: "$set", Value: data}}
 	_, err := db.collection.UpdateOne(ctx, filter, update)
 	return err
 }
 func (db *mongodb) UpdateSpecific(ctx context.Context, filter interface{}, key string, value interface{}) error {
-	update := bson.D{primitive.E{Key: "$set", Value: primitive.E{Key: key, Value: value}}}
+	update := bson.D{bson.E{Key: "$set", Value: bson.E{Key: key, Value: value}}}
 	_, err := db.collection.UpdateOne(ctx, filter, update)
 	return err
 }
 func (db *mongodb) IncrementValue(ctx context.Context, filter interface{}, key string, value interface{}) error {
-	update := bson.D{primitive.E{Key: "$inc", Value: primitive.E{Key: key, Value: value}}}
+	update := bson.D{bson.E{Key: "$inc", Value: bson.E{Key: key, Value: value}}}
 	_, err := db.collection.UpdateOne(ctx, filter, update)
 	return err
 }
