@@ -11,7 +11,7 @@ services:
       context: ./manager
       args:
         - SERVICE_NAME=gateway
-        - GIT_COMMIT=74120d1644c25df11dfe5a9265a800e3a528ba4e
+        - GIT_COMMIT=45bfbcadbfe3b3f9d3f7a50155fcda24a8658e45
     container_name: gateway
     entrypoint: /app/monster-reacher-server/gateway/gateway
     ports:
@@ -26,7 +26,7 @@ services:
       context: ./manager
       args:
         - SERVICE_NAME=services-discovery
-        - GIT_COMMIT=74120d1644c25df11dfe5a9265a800e3a528ba4e
+        - GIT_COMMIT=45bfbcadbfe3b3f9d3f7a50155fcda24a8658e45
     container_name: services-discovery
     entrypoint: /app/monster-reacher-server/services-discovery/services-discovery
     ports:
@@ -42,7 +42,7 @@ services:
       context: ./microservices
       args:
         - SERVICE_NAME=wartech
-        - GIT_COMMIT=74120d1644c25df11dfe5a9265a800e3a528ba4e
+        - GIT_COMMIT=45bfbcadbfe3b3f9d3f7a50155fcda24a8658e45
     container_name: microservice-wartech
     entrypoint: /app/monster-reacher-server/microservices/cmd/wartech/wartech
     ports:
@@ -59,7 +59,7 @@ services:
       context: ./microservices
       args:
         - SERVICE_NAME=authentication
-        - GIT_COMMIT=74120d1644c25df11dfe5a9265a800e3a528ba4e
+        - GIT_COMMIT=45bfbcadbfe3b3f9d3f7a50155fcda24a8658e45
     container_name: microservice-authentication
     entrypoint: /app/monster-reacher-server/microservices/cmd/authentication/authentication
     ports:
@@ -75,7 +75,7 @@ services:
       context: ./microservices
       args:
         - SERVICE_NAME=character
-        - GIT_COMMIT=74120d1644c25df11dfe5a9265a800e3a528ba4e
+        - GIT_COMMIT=45bfbcadbfe3b3f9d3f7a50155fcda24a8658e45
     container_name: microservice-character
     entrypoint: /app/monster-reacher-server/microservices/cmd/character/character
     ports:
@@ -91,7 +91,7 @@ services:
       context: ./microservices
       args:
         - SERVICE_NAME=profile
-        - GIT_COMMIT=74120d1644c25df11dfe5a9265a800e3a528ba4e
+        - GIT_COMMIT=45bfbcadbfe3b3f9d3f7a50155fcda24a8658e45
     container_name: microservice-profile
     entrypoint: /app/monster-reacher-server/microservices/cmd/profile/profile
     ports:
